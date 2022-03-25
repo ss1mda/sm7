@@ -205,16 +205,14 @@ class _LoginScreenState extends State<LoginScreen> {
         children: <Widget>[
           _buildSocialBtn(
             () => print('Login with Kakao'),
-            AssetImage(
-              'assets/logos/kakaoLogo.jpg',
-            ),
+            const AssetImage("assets/kakaoLogo.jpg"),
           ),
-          _buildSocialBtn(
-            () => print('Login with Google'),
-            AssetImage(
-              'assets/logos/google.jpg',
-            ),
-          ),
+          // _buildSocialBtn(
+          //   () => print('Login with Google'),
+          //   AssetImage(
+          //     'assets/logos/google.jpg',
+          //   ),
+          // ),
         ],
       ),
     );

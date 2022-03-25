@@ -1,15 +1,136 @@
+//signupPage.dart
+import 'dart:convert';
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:sm7/signupPage.dart';
 import 'package:sm7/utilities/constants(login).dart';
+import 'package:sm7/model/userModel.dart';
+import 'package:sm7/loginPage.dart';
+import 'package:http/http.dart' as http;
 
 class CreateAccount extends StatefulWidget {
+  const CreateAccount({Key? key}) : super(key: key);
   @override
   _CreateAccountState createState() => _CreateAccountState();
 }
 
+Future<UserModel> createAccount(
+    String name, String email, String password) async {
+  String url = "http://35.77.144.191/accounts";
+
+  final response = await http.post(Uri.parse(url),
+      body: jsonEncode(<String, String>{
+        "name": name,
+        "email": email,
+        "password": password
+      }));
+  final data = response.body;
+  print(data);
+  if (response.statusCode == 201) {
+    final String responseString = response.body;
+
+    return userModelFromJson(responseString);
+  } else {
+    throw Exception("Failed");
+  }
+}
+
+class CustomDialog extends StatelessWidget {
+  final String title, description, buttonText;
+  final Image image;
+
+  CustomDialog(
+      {required this.title,
+      required this.description,
+      required this.buttonText,
+      required this.image});
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      child: dialogContent(context),
+    );
+  }
+
+  dialogContent(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        Container(
+          padding:
+              const EdgeInsets.only(top: 100, bottom: 16, left: 16, right: 16),
+          margin: const EdgeInsets.only(top: 16),
+          decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(17),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 10.0,
+                  offset: Offset(0.0, 10.0),
+                )
+              ]),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              SizedBox(height: 16.0),
+              Text(description, style: TextStyle(fontSize: 16.0)),
+              SizedBox(height: 24.0),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: TextButton(
+                    child: Text("Confirm"),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => LoginScreen()));
+                    },
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+        Positioned(
+          child: CircleAvatar(
+            backgroundColor: Colors.grey.shade600,
+            backgroundImage: const AssetImage('assets/XLpr.gif'),
+            radius: 50,
+          ),
+          top: 0,
+          left: 16,
+          right: 16,
+        )
+      ],
+    );
+  }
+}
+
 class _CreateAccountState extends State<CreateAccount> {
   bool _rememberMe = false;
+
+  TextEditingController _name = TextEditingController();
+  TextEditingController _email = TextEditingController();
+  TextEditingController _password = TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
+
+  String name = '';
+  String email = '';
+  String password = '';
 
   Widget _buildBranchNameTF() {
     return Column(
@@ -19,21 +140,28 @@ class _CreateAccountState extends State<CreateAccount> {
           'Branch Name',
           style: kLabelStyle,
         ),
-        SizedBox(height: 10.0),
+        const SizedBox(height: 10.0),
         Container(
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
           height: 60.0,
-          child: TextField(
+          child: TextFormField(
+            controller: _name,
+            validator: (val) {
+              if (val == null || val.isEmpty) {
+                return 'Enter Branch Name';
+              }
+              return null;
+            },
             keyboardType: TextInputType.name,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
               border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
+              contentPadding: const EdgeInsets.only(top: 14.0),
+              prefixIcon: const Icon(
                 Icons.coffee,
                 color: Colors.white,
               ),
@@ -46,41 +174,6 @@ class _CreateAccountState extends State<CreateAccount> {
     );
   }
 
-  // Widget _buildPhoneNoTF() {
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: <Widget>[
-  //       Text(
-  //         'Phone No',
-  //         style: kLabelStyle,
-  //       ),
-  //       SizedBox(height: 10.0),
-  //       Container(
-  //         alignment: Alignment.centerLeft,
-  //         decoration: kBoxDecorationStyle,
-  //         height: 60.0,
-  //         child: TextField(
-  //           keyboardType: TextInputType.name,
-  //           style: TextStyle(
-  //             color: Colors.white,
-  //             fontFamily: 'OpenSans',
-  //           ),
-  //           decoration: InputDecoration(
-  //             border: InputBorder.none,
-  //             contentPadding: EdgeInsets.only(top: 14.0),
-  //             prefixIcon: Icon(
-  //               Icons.phone_android,
-  //               color: Colors.white,
-  //             ),
-  //             hintText: 'Enter your Phone no',
-  //             hintStyle: kHintTextStyle,
-  //           ),
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
-
   Widget _buildEmailTF() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,21 +182,28 @@ class _CreateAccountState extends State<CreateAccount> {
           'Email',
           style: kLabelStyle,
         ),
-        SizedBox(height: 10.0),
+        const SizedBox(height: 10.0),
         Container(
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
           height: 60.0,
-          child: TextField(
+          child: TextFormField(
+            controller: _email,
             keyboardType: TextInputType.emailAddress,
-            style: TextStyle(
+            validator: (val) {
+              if (val == null || val.isEmpty) {
+                return 'Enter Email';
+              }
+              return null;
+            },
+            style: const TextStyle(
               color: Colors.white,
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
               border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
+              contentPadding: const EdgeInsets.only(top: 14.0),
+              prefixIcon: const Icon(
                 Icons.email,
                 color: Colors.white,
               ),
@@ -124,21 +224,28 @@ class _CreateAccountState extends State<CreateAccount> {
           'Password',
           style: kLabelStyle,
         ),
-        SizedBox(height: 10.0),
+        const SizedBox(height: 10.0),
         Container(
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
           height: 60.0,
-          child: TextField(
+          child: TextFormField(
+            controller: _password,
+            validator: (val) {
+              if (val == null || val.isEmpty) {
+                return 'Enter Password';
+              }
+              return null;
+            },
             obscureText: true,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontFamily: 'OpenSans',
             ),
             decoration: InputDecoration(
               border: InputBorder.none,
-              contentPadding: EdgeInsets.only(top: 14.0),
-              prefixIcon: Icon(
+              contentPadding: const EdgeInsets.only(top: 14.0),
+              prefixIcon: const Icon(
                 Icons.lock,
                 color: Colors.white,
               ),
@@ -153,19 +260,40 @@ class _CreateAccountState extends State<CreateAccount> {
 
   Widget _buildRegisterBtn() {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 25.0),
+      padding: const EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           elevation: 5.0,
-          padding: EdgeInsets.all(15.0),
+          padding: const EdgeInsets.all(15.0),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30.0),
           ),
           primary: Colors.white,
         ),
-        onPressed: () => print('Login Button Pressed'),
-        child: Text(
+        onPressed: () async {
+          if (_formKey.currentState!.validate()) {
+            final String name = _name.text;
+            final String email = _email.text;
+            final String password = _password.text;
+
+            final UserModel user = await createAccount(name, email, password);
+
+            setState(() {
+              final _user = user;
+            });
+
+            showDialog(
+                context: context,
+                builder: (_) => CustomDialog(
+                      title: "Success",
+                      description: "signUp Complete",
+                      buttonText: "abc",
+                      image: Image.asset('/assets/XLpr.gif'),
+                    ));
+          }
+        },
+        child: const Text(
           'REGISTER',
           style: TextStyle(
             color: Color.fromARGB(255, 0, 0, 0),
@@ -185,7 +313,7 @@ class _CreateAccountState extends State<CreateAccount> {
         Navigator.pop(context);
       },
       child: RichText(
-        text: TextSpan(
+        text: const TextSpan(
           children: [
             TextSpan(
               text: 'Have an Account? ',
@@ -221,7 +349,7 @@ class _CreateAccountState extends State<CreateAccount> {
               Container(
                 height: double.infinity,
                 width: double.infinity,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
@@ -237,44 +365,43 @@ class _CreateAccountState extends State<CreateAccount> {
               ),
               Container(
                 height: double.infinity,
-                child: SingleChildScrollView(
-                  physics: AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 40.0,
-                    vertical: 120.0,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'Sign Up',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'OpenSans',
-                          fontSize: 30.0,
-                          fontWeight: FontWeight.bold,
+                child: Form(
+                  key: _formKey,
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 40.0,
+                      vertical: 120.0,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        const Text(
+                          'Sign Up',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'OpenSans',
+                            fontSize: 30.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 30.0),
-                      _buildBranchNameTF(),
-                      SizedBox(
-                        height: 30.0,
-                      ),
-                      // _buildPhoneNoTF(),
-                      // SizedBox(
-                      //   height: 30.0,
-                      // ),
-                      _buildEmailTF(),
-                      SizedBox(
-                        height: 30.0,
-                      ),
-                      _buildPasswordTF(),
-                      SizedBox(
-                        height: 30.0,
-                      ),
-                      _buildRegisterBtn(),
-                      _buildSigninBtn(),
-                    ],
+                        const SizedBox(height: 30.0),
+                        _buildBranchNameTF(),
+                        const SizedBox(
+                          height: 30.0,
+                        ),
+                        _buildEmailTF(),
+                        const SizedBox(
+                          height: 30.0,
+                        ),
+                        _buildPasswordTF(),
+                        const SizedBox(
+                          height: 30.0,
+                        ),
+                        _buildRegisterBtn(),
+                        _buildSigninBtn(),
+                      ],
+                    ),
                   ),
                 ),
               )
