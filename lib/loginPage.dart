@@ -3,6 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:sm7/signupPage.dart';
 import 'package:sm7/menuPage.dart';
 import 'package:sm7/utilities/constants(login).dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:async';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -11,6 +14,27 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool _rememberMe = false;
+  TextEditingController _email = TextEditingController();
+  TextEditingController _password = TextEditingController();
+
+  Future<void> loginUser() async {
+    if (_email.text.isNotEmpty && _password.text.isNotEmpty) {
+      final body =
+          jsonEncode({'email': _email.text, 'password': _password.text});
+      final response =
+          await http.post(Uri.parse("http://35.77.144.191/login"), body: body);
+      if (response.statusCode == 200) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => MenuPage()));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Invaild Credentials.")));
+      }
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Black Field Not Allowed")));
+    }
+  }
 
   Widget _buildEmailTF() {
     return Column(
@@ -25,7 +49,14 @@ class _LoginScreenState extends State<LoginScreen> {
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
           height: 60.0,
-          child: TextField(
+          child: TextFormField(
+            controller: _email,
+            // validator: (val) {
+            //   if (val == null || val.isEmpty) {
+            //     return 'Enter email';
+            //   }
+            //   return null;
+            // },
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(
               color: Colors.white,
@@ -60,7 +91,14 @@ class _LoginScreenState extends State<LoginScreen> {
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
           height: 60.0,
-          child: TextField(
+          child: TextFormField(
+            controller: _password,
+            // validator: (val) {
+            //   if (val == null || val.isEmpty) {
+            //     return 'Enter password';
+            //   }
+            //   return null;
+            // },
             obscureText: true,
             style: TextStyle(
               color: Colors.white,
@@ -137,8 +175,9 @@ class _LoginScreenState extends State<LoginScreen> {
           primary: Colors.white,
         ),
         onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (_) => MenuPage()));
+          print(_email.text);
+          print(_password.text);
+          loginUser();
         },
         child: Text(
           'LOGIN',
@@ -310,7 +349,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
