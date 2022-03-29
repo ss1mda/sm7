@@ -57,6 +57,7 @@ flutter:
   assets:
    - assets/
    - assets/kakaoLogo.jpg
+   - assets/test01.json
 
 
   fonts:
