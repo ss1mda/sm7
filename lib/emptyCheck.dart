@@ -10,7 +10,7 @@ class EmptyCheck extends StatefulWidget {
   _EmptyCheckState createState() => _EmptyCheckState();
 }
 
-final jsonString = {"position": 1,"table":1,"person":1,"mask":1};
+final jsonString = {"position": 1,"object":[1,2,3,1],"chair":{"up":[0,1,2,3],"down":[0,1,2,3]}}; //바뀐거로
 
 class myPainter extends CustomPainter
 {
@@ -22,7 +22,7 @@ class myPainter extends CustomPainter
       ..color = Colors.grey
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.fill;
-    canvas.drawRect(Offset(100,100) & const Size(200, 150), paint);
+    canvas.drawRect(Offset(-75, -75) & const Size(150, 100), paint);
   }
 
   void _table(Canvas canvas,Size size) {
@@ -30,88 +30,51 @@ class myPainter extends CustomPainter
       ..color = Colors.blue
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.fill;
-    canvas.drawRect(Offset(100,100) & const Size(200, 150), paint);
+    canvas.drawRect(Offset(-75,-75) & const Size(150, 100), paint);
   }
 
   void _noperson(Canvas canvas,Size size) {
     Paint paint = Paint()
       ..color = Colors.grey
       ..style = PaintingStyle.fill;
-    canvas.drawCircle(Offset(size.width.toInt() / 2, size.width.toInt() / 2), 20, paint);
+    canvas.drawCircle(Offset(0,0), 20, paint);
   }
 
   void _person_mask(Canvas canvas,Size size) {
     Paint paint = Paint()
       ..color = Colors.blue
       ..style = PaintingStyle.fill;
-    canvas.drawCircle(Offset(size.width.toInt() / 2, size.width.toInt() / 2), 20, paint);
+    canvas.drawCircle(Offset(0,0), 20, paint);
   }
 
   void _person_nomask(Canvas canvas,Size size) {
     Paint paint = Paint()
       ..color = Colors.red
       ..style = PaintingStyle.fill;
-    canvas.drawCircle(Offset(size.width.toInt() / 2, size.width.toInt() / 2), 20, paint);
+    canvas.drawCircle(Offset(0,0), 20, paint);
   }
 
   @override
   void paint(Canvas canvas, Size size) {
     if(target == "p1"){
       _person_mask(canvas, size);
+    }else if(target == "p2") {
+      _person_nomask(canvas, size);
+    }else if(target == "p3") {
+      _person_mask(canvas, size);
+    }else if(target == "p4") {
+      _noperson(canvas, size);
+    }else if(target == "p5") {
+      _person_mask(canvas, size);
+    }else if(target == "p6"){
+      _noperson(canvas, size);
     }else if(target == "t1"){
       _table(canvas, size);
-    }else if(target == "p2"){
-      _person_nomask(canvas, size);
+    }else if(target == "t2"){
+      _emptytable(canvas, size);
+    }else if(target == "t3") {
+      _table(canvas, size);
     }
-    // _emptytable(canvas,size);
-    // _table(canvas, size);
-    // _noperson(canvas, size);
-    // _person_nomask(canvas, size);
-    // _person_mask(canvas, size);
-
-    // if (jsonString[0] == 0) {
-    //   if (jsonString[1] == 0) { //0번테이블, 빈자리
-    //     _emptytable(canvas, size);
-    //     _noperson(canvas, size);
-    //   } else { //0번테이블, 자리있음
-    //     if (jsonString[3] == 1 && jsonString[4] == 0) { //0번테이블 사람있음, 마스크 안꼈음
-    //       _table(canvas, size);
-    //       _person_nomask(canvas, size);
-    //     } else
-    //     if (jsonString[3] == 1 && jsonString[4] == 1) { //0번테이블 사람있음, 마스크 안꼈음
-    //       _table(canvas, size);
-    //       _person_mask(canvas, size);
-    //     }
-    //   }
-    // } else if(jsonString[0] == 1){ //1번테이블, 빈자리
-    //   if (jsonString[1] == 0) { //1번테이블, 빈자리
-    //     _emptytable(canvas, size);
-    //     _noperson(canvas, size);
-    //   } else { //1번테이블, 자리있음
-    //     if (jsonString[3] == 1 && jsonString[4] == 0) { //1번테이블 사람있음, 마스크 안꼈음
-    //       _table(canvas, size);
-    //       _person_nomask(canvas, size);
-    //     } else
-    //     if (jsonString[3] == 1 && jsonString[4] == 1) { //1번테이블 사람있음, 마스크 안꼈음
-    //       _table(canvas, size);
-    //       _person_mask(canvas, size);
-    //     }
-    //   }
-    // }else{
-    //   if (jsonString[1] == 0) { //2번테이블, 빈자리
-    //     _emptytable(canvas, size);
-    //     _noperson(canvas, size);
-    //   } else { //2번테이블, 자리있음
-    //     if (jsonString[3] == 1 && jsonString[4] == 0) { //2번테이블 사람있음, 마스크 안꼈음
-    //       _table(canvas, size);
-    //       _person_nomask(canvas, size);
-    //     } else
-    //     if (jsonString[3] == 1 && jsonString[4] == 1) { //2번테이블 사람있음, 마스크 안꼈음
-    //       _table(canvas, size);
-    //       _person_mask(canvas, size);
-    //     }
-    //   }
-    // }
   }
 
   @override
@@ -152,89 +115,83 @@ class _EmptyCheckState extends State<EmptyCheck> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Container(
-                          height:100,
-                          width:100,
                           alignment: Alignment.center,
                           child:CustomPaint(
                             painter: myPainter("p1"),
                           ),
                         ),
+                        SizedBox(
+                          height: 93,
+                        ),
                         Container(
-                          height:400,
-                          width:400,
                           alignment: Alignment.center,
                           child:CustomPaint(
                             painter: myPainter("t1"),
                           ),
                         ),
+                        SizedBox(
+                          height: 45,
+                        ),
                         Container(
-                          height:100,
-                          width:100,
                           alignment: Alignment.center,
                           child:CustomPaint(
                             painter: myPainter("p2"),
                           ),
                         ),
-                        // SizedBox(
-                        //   height: 50,
-                        // ),
-                        // Container(
-                        //   height:100,
-                        //   width:150,
-                        //   child:CustomPaint(
-                        //     painter: myPainter("p1"),
-                        //   ),
-                        // ),
-                        // SizedBox(
-                        //   height: 20,
-                        // ),
-                        // Container(
-                        //   height:150,
-                        //   width:150,
-                        //   child:CustomPaint(
-                        //     painter: myPainter("t1"),
-                        //   ),
-                        // ),
-                        // SizedBox(
-                        //   height: 20,
-                        // ),
-                        // Container(
-                        //   height:10,
-                        //   width:150,
-                        //   child:CustomPaint(
-                        //     painter: myPainter("p2"),
-                        //   ),
-                        // ),
-                        // SizedBox(
-                        //   height: 50,
-                        // ),
-                        // Container(
-                        //   height:10,
-                        //   width:150,
-                        //   child:CustomPaint(
-                        //     painter: myPainter("p1"),
-                        //   ),
-                        // ),
-                        // SizedBox(
-                        //   height: 20,
-                        // ),
-                        // Container(
-                        //   height:100,
-                        //   width:150,
-                        //   child:CustomPaint(
-                        //     painter: myPainter("t1"),
-                        //   ),
-                        // ),
-                        // SizedBox(
-                        //   height: 20,
-                        // ),
-                        // Container(
-                        //   height:10,
-                        //   width:150,
-                        //   child:CustomPaint(
-                        //     painter: myPainter("p2"),
-                        //   ),
-                        // ),
+                        SizedBox(
+                          height: 45,
+                        ),
+                        Container(
+                          alignment: Alignment.center,
+                          child:CustomPaint(
+                            painter: myPainter("p3"),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 93,
+                        ),
+                        Container(
+                          alignment: Alignment.center,
+                          child:CustomPaint(
+                            painter: myPainter("t2"),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 45,
+                        ),
+                        Container(
+                          alignment: Alignment.center,
+                          child:CustomPaint(
+                            painter: myPainter("p4"),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 45,
+                        ),
+                        Container(
+                          alignment: Alignment.center,
+                          child:CustomPaint(
+                            painter: myPainter("p5"),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 93,
+                        ),
+                        Container(
+                          alignment: Alignment.center,
+                          child:CustomPaint(
+                            painter: myPainter("t3"),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 45,
+                        ),
+                        Container(
+                          alignment: Alignment.center,
+                          child:CustomPaint(
+                            painter: myPainter("p6"),
+                          ),
+                        ),
                       ]))
             ],
           ),
@@ -243,3 +200,4 @@ class _EmptyCheckState extends State<EmptyCheck> {
     );
   }
 }
+
