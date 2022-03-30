@@ -10,69 +10,102 @@ class EmptyCheck extends StatefulWidget {
   _EmptyCheckState createState() => _EmptyCheckState();
 }
 
-final jsonString = {"position": 1,"object":[1,2,3,1],"chair":{"up":[0,1,2,3],"down":[0,1,2,3]}}; //바뀐거로
+final Map<String, dynamic> jsonString2 = {
+  'table3': { //테이블3
+    'chair': {
+      'up': 2, //0빈자리, 1마스크한사람, 2마스크안한사람, 3error
+      'down': 1
+    },
+    'object':
+    {
+      "notebook": 1, //노트북 갯수
+      "book": 0, //책 갯수
+      "bag": 2, //가방 갯수
+      "cup": 2 // 컵 갯수
+    }
+  }
+};
+//바뀐거로
 
-class myPainter extends CustomPainter
-{
+class myPainter extends CustomPainter {
   String target;
   myPainter(this.target);
 
-  void _emptytable(Canvas canvas,Size size) {
+
+  void _emptytable(Canvas canvas, Size size) {
     Paint paint = Paint()
       ..color = Colors.grey
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.fill;
-    canvas.drawRect(Offset(-75, -75) & const Size(150, 100), paint);
+    canvas.drawRect(Offset(-80, -30) & const Size(160, 60), paint);
   }
 
-  void _table(Canvas canvas,Size size) {
+  void _table(Canvas canvas, Size size) {
     Paint paint = Paint()
       ..color = Colors.blue
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.fill;
-    canvas.drawRect(Offset(-75,-75) & const Size(150, 100), paint);
+    canvas.drawRect(Offset(-80, -30) & const Size(160, 60), paint);
   }
 
-  void _noperson(Canvas canvas,Size size) {
+  void _noperson(Canvas canvas, Size size) {
     Paint paint = Paint()
       ..color = Colors.grey
       ..style = PaintingStyle.fill;
-    canvas.drawCircle(Offset(0,0), 20, paint);
+    canvas.drawCircle(Offset(0, 0), 20, paint);
   }
 
-  void _person_mask(Canvas canvas,Size size) {
+  void _person_mask(Canvas canvas, Size size) {
     Paint paint = Paint()
       ..color = Colors.blue
       ..style = PaintingStyle.fill;
-    canvas.drawCircle(Offset(0,0), 20, paint);
+    canvas.drawCircle(Offset(0, 0), 20, paint);
   }
 
-  void _person_nomask(Canvas canvas,Size size) {
+  void _person_nomask(Canvas canvas, Size size) {
     Paint paint = Paint()
       ..color = Colors.red
       ..style = PaintingStyle.fill;
-    canvas.drawCircle(Offset(0,0), 20, paint);
+    canvas.drawCircle(Offset(0, 0), 20, paint);
   }
 
   @override
   void paint(Canvas canvas, Size size) {
-    if(target == "p1"){
+    if (target == "p1") {
       _person_mask(canvas, size);
-    }else if(target == "p2") {
+    } else if (target == "p2") {
       _person_nomask(canvas, size);
-    }else if(target == "p3") {
+    } else if (target == "p3") {
       _person_mask(canvas, size);
-    }else if(target == "p4") {
+    } else if (target == "p4") {
       _noperson(canvas, size);
-    }else if(target == "p5") {
+    } else if (target == "p5" && jsonString2.keys.first.toString() == "table3" && jsonString2["table3"]["chair"].keys.first.toString() == "up")
+    {
+      if(jsonString2["table3"]["chair"]["up"] == 0){
+        _noperson(canvas, size);
+      }else if(jsonString2["table3"]["chair"]["up"] == 1){
+        _person_mask(canvas, size);
+      }else if(jsonString2["table3"]["chair"]["up"] == 2){
+        _person_nomask(canvas, size);
+      }else{
+        _person_nomask(canvas, size);
+      }
+    } else if (target == "p6" && jsonString2.keys.first.toString() == "table3" && jsonString2["table3"]["chair"].keys.last.
+        toString() == "down")
+    { if(jsonString2["table3"]["chair"]["down"] == 0){
+      _noperson(canvas, size);
+    }else if(jsonString2["table3"]["chair"]["down"] == 1){
       _person_mask(canvas, size);
-    }else if(target == "p6"){
-      _noperson(canvas, size);
-    }else if(target == "t1"){
+    }else if(jsonString2["table3"]["chair"]["down"] == 2){
+      _person_nomask(canvas, size);
+    }else{
+      _person_nomask(canvas, size);
+    }
+    } else if (target == "t1") {
       _table(canvas, size);
-    }else if(target == "t2"){
+    } else if (target == "t2") {
       _emptytable(canvas, size);
-    }else if(target == "t3") {
+    } else if (target == "t3") {
       _table(canvas, size);
     }
   }
@@ -84,9 +117,16 @@ class myPainter extends CustomPainter
 }
 
 class _EmptyCheckState extends State<EmptyCheck> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("좌석 & 마스크 확인", style: TextStyle(fontSize: 20.0)),
+        backgroundColor: Colors.black,
+        centerTitle: true,
+        elevation: 0.0,
+      ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: GestureDetector(
@@ -110,89 +150,97 @@ class _EmptyCheckState extends State<EmptyCheck> {
                   ),
                 ),
               ),
-              Center(
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          alignment: Alignment.center,
-                          child:CustomPaint(
-                            painter: myPainter("p1"),
+              SafeArea(
+                child: Center(
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          SizedBox(
+                            height: 80,
                           ),
-                        ),
-                        SizedBox(
-                          height: 93,
-                        ),
-                        Container(
-                          alignment: Alignment.center,
-                          child:CustomPaint(
-                            painter: myPainter("t1"),
+                          Container(
+                            // alignment: Alignment.center,
+                            child: CustomPaint(
+                              painter: myPainter("p1"),
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 45,
-                        ),
-                        Container(
-                          alignment: Alignment.center,
-                          child:CustomPaint(
-                            painter: myPainter("p2"),
+                          SizedBox(
+                            height: 50,
                           ),
-                        ),
-                        SizedBox(
-                          height: 45,
-                        ),
-                        Container(
-                          alignment: Alignment.center,
-                          child:CustomPaint(
-                            painter: myPainter("p3"),
+                          Container(
+                            // alignment: Alignment.center,
+                            child: CustomPaint(
+                              painter: myPainter("t1"),
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 93,
-                        ),
-                        Container(
-                          alignment: Alignment.center,
-                          child:CustomPaint(
-                            painter: myPainter("t2"),
+                          SizedBox(
+                            height: 50,
                           ),
-                        ),
-                        SizedBox(
-                          height: 45,
-                        ),
-                        Container(
-                          alignment: Alignment.center,
-                          child:CustomPaint(
-                            painter: myPainter("p4"),
+                          Container(
+                            // alignment: Alignment.center,
+                            child: CustomPaint(
+                              painter: myPainter("p2"),
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 45,
-                        ),
-                        Container(
-                          alignment: Alignment.center,
-                          child:CustomPaint(
-                            painter: myPainter("p5"),
+                          SizedBox(
+                            height: 70,
                           ),
-                        ),
-                        SizedBox(
-                          height: 93,
-                        ),
-                        Container(
-                          alignment: Alignment.center,
-                          child:CustomPaint(
-                            painter: myPainter("t3"),
+                          Container(
+                            // alignment: Alignment.center,
+                            child: CustomPaint(
+                              painter: myPainter("p3"),
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 45,
-                        ),
-                        Container(
-                          alignment: Alignment.center,
-                          child:CustomPaint(
-                            painter: myPainter("p6"),
+                          SizedBox(
+                            height: 50,
                           ),
-                        ),
-                      ]))
+                          Container(
+                            // alignment: Alignment.center,
+                            child: CustomPaint(
+                              painter: myPainter("t2"),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 50,
+                          ),
+                          Container(
+                            // alignment: Alignment.center,
+                            child: CustomPaint(
+                              painter: myPainter("p4"),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 70,
+                          ),
+                          Container(
+                            // alignment: Alignment.center,
+                            child: CustomPaint(
+                              painter: myPainter("p5"),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 50,
+                          ),
+                          Container(
+                            // alignment: Alignment.center,
+                            child: CustomPaint(
+                              painter: myPainter("t3"),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 50,
+                          ),
+                          Container(
+                            // alignment: Alignment.center,
+                            child: CustomPaint(
+                              painter: myPainter("p6"),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 80,
+                          ),
+                        ])),
+              )
             ],
           ),
         ),
@@ -200,4 +248,3 @@ class _EmptyCheckState extends State<EmptyCheck> {
     );
   }
 }
-
