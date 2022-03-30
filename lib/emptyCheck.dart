@@ -11,13 +11,36 @@ class EmptyCheck extends StatefulWidget {
 }
 
 final Map<String, dynamic> jsonString2 = {
-  'table3': { //테이블3
+  'table1': {  //테이블1
     'chair': {
       'up': 2, //0빈자리, 1마스크한사람, 2마스크안한사람, 3error
+      'down': 3
+    },
+    'object': {
+      "notebook": 1, //노트북 갯수
+      "book": 0, //책 갯수
+      "bag": 2, //가방 갯수
+      "cup": 2 // 컵 갯수
+    }
+  },
+  'table2': {  //테이블2
+    'chair': {
+      'up': 1, //0빈자리, 1마스크한사람, 2마스크안한사람, 3error
       'down': 1
     },
-    'object':
-    {
+    'object': {
+      "notebook": 1, //노트북 갯수
+      "book": 0, //책 갯수
+      "bag": 2, //가방 갯수
+      "cup": 2 // 컵 갯수
+    }
+  },
+  'table3': { //테이블3
+    'chair': {
+      'up': 1, //0빈자리, 1마스크한사람, 2마스크안한사람, 3error
+      'down': 3
+    },
+    'object': {
       "notebook": 1, //노트북 갯수
       "book": 0, //책 갯수
       "bag": 2, //가방 갯수
@@ -69,17 +92,56 @@ class myPainter extends CustomPainter {
     canvas.drawCircle(Offset(0, 0), 20, paint);
   }
 
-  @override
-  void paint(Canvas canvas, Size size) {
-    if (target == "p1") {
-      _person_mask(canvas, size);
-    } else if (target == "p2") {
-      _person_nomask(canvas, size);
-    } else if (target == "p3") {
-      _person_mask(canvas, size);
-    } else if (target == "p4") {
-      _noperson(canvas, size);
-    } else if (target == "p5" && jsonString2.keys.first.toString() == "table3" && jsonString2["table3"]["chair"].keys.first.toString() == "up")
+  void table1_person(Canvas canvas, Size size) { //p2, table1
+      if (target == "p1" && jsonString2["table1"]["chair"].keys.elementAt(0) == "up") { //p1, table1, up
+        if (jsonString2["table1"]["chair"]["up"] == 0) {
+          _noperson(canvas, size);
+        } else if (jsonString2["table1"]["chair"]["up"] == 1) {
+          _person_mask(canvas, size);
+        } else if (jsonString2["table1"]["chair"]["up"] == 2) {
+          _person_nomask(canvas, size);
+        } else {
+          _person_nomask(canvas, size);
+        }
+      } else if (target == "p2" && jsonString2["table1"]["chair"].keys.elementAt(1) == "down") { //p2, table, down
+        if (jsonString2["table1"]["chair"]["down"] == 0) {
+          _noperson(canvas, size);
+        } else if (jsonString2["table1"]["chair"]["down"] == 1) {
+          _person_mask(canvas, size);
+        } else if (jsonString2["table1"]["chair"]["down"] == 2) {
+          _person_nomask(canvas, size);
+        } else {
+          _person_nomask(canvas, size);
+        }
+      }
+    }
+
+  void table2_person(Canvas canvas, Size size){
+    if (target == "p3" && jsonString2["table2"]["chair"].keys.elementAt(0) == "up") {
+      if (jsonString2["table2"]["chair"]["up"] == 0) {
+        _noperson(canvas, size);
+      } else if (jsonString2["table2"]["chair"]["up"] == 1) {
+        _person_mask(canvas, size);
+      } else if (jsonString2["table2"]["chair"]["up"] == 2) {
+        _person_nomask(canvas, size);
+      } else {
+        _person_nomask(canvas, size);
+      }
+    } else if (target == "p4" && jsonString2["table2"]["chair"].keys.elementAt(1) == "down") {
+      if (jsonString2["table2"]["chair"]["down"] == 0) {
+        _noperson(canvas, size);
+      } else if (jsonString2["table2"]["chair"]["down"] == 1) {
+        _person_mask(canvas, size);
+      } else if (jsonString2["table2"]["chair"]["down"] == 2) {
+        _person_nomask(canvas, size);
+      } else {
+        _person_nomask(canvas, size);
+      }
+    }
+  }
+
+  void table3_person(Canvas canvas, Size size){
+    if (target == "p5" && jsonString2["table3"]["chair"].keys.elementAt(0) == "up")
     {
       if(jsonString2["table3"]["chair"]["up"] == 0){
         _noperson(canvas, size);
@@ -90,23 +152,42 @@ class myPainter extends CustomPainter {
       }else{
         _person_nomask(canvas, size);
       }
-    } else if (target == "p6" && jsonString2.keys.first.toString() == "table3" && jsonString2["table3"]["chair"].keys.last.
-        toString() == "down")
-    { if(jsonString2["table3"]["chair"]["down"] == 0){
-      _noperson(canvas, size);
-    }else if(jsonString2["table3"]["chair"]["down"] == 1){
-      _person_mask(canvas, size);
-    }else if(jsonString2["table3"]["chair"]["down"] == 2){
-      _person_nomask(canvas, size);
-    }else{
-      _person_nomask(canvas, size);
+    } else if (target == "p6" && jsonString2["table3"]["chair"].keys.elementAt(1) == "down") {
+      if(jsonString2["table3"]["chair"]["down"] == 0){
+        _noperson(canvas, size);
+      }else if(jsonString2["table3"]["chair"]["down"] == 1){
+        _person_mask(canvas, size);
+      }else if(jsonString2["table3"]["chair"]["down"] == 2){
+        _person_nomask(canvas, size);
+      }else{
+        _person_nomask(canvas, size);
+      }
     }
-    } else if (target == "t1") {
-      _table(canvas, size);
-    } else if (target == "t2") {
-      _emptytable(canvas, size);
-    } else if (target == "t3") {
-      _table(canvas, size);
+  }
+
+  void table1(Canvas canvas, Size size){
+
+  }
+  void table2(Canvas canvas, Size size){
+  }
+
+  void table3(Canvas canvas, Size size){
+  }
+
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    for(int i=0; i<3; i++) {
+      if (jsonString2.keys.elementAt(i) == "table1") { //table1일경우
+        table1_person(canvas, size);
+        table1(canvas, size);
+      } else if (jsonString2.keys.elementAt(i) == "table2") { //table2일경우만
+        table2_person(canvas, size);
+        table2(canvas, size);
+      } else {
+        table3_person(canvas, size);
+        table3(canvas, size);
+      }
     }
   }
 
