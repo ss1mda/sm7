@@ -22,30 +22,14 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> loginUser() async {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => MenuPage()));
-    // if (_email.text.isNotEmpty && _password.text.isNotEmpty) {
-    //   final body =
-    //   jsonEncode({'email': _email.text, 'password': _password.text});
-    //   final response =
-    //   await http.post(Uri.parse("http://35.77.144.191/login"), body: body);
-    //   if (response.statusCode == 200) {
-    //     Navigator.push(
-    //         context, MaterialPageRoute(builder: (context) => MenuPage()));
-    //   } else {
-    //     ScaffoldMessenger.of(context).showSnackBar(
-    //         const SnackBar(content: Text("Invaild Credentials.")));
-    //   }
-    // } else {
-    //   ScaffoldMessenger.of(context)
-    //       .showSnackBar(SnackBar(content: Text("Black Field Not Allowed")));
-    // }
   }
 
   // Future<void> loginUser() async {
   //   if (_email.text.isNotEmpty && _password.text.isNotEmpty) {
   //     final body =
-  //     jsonEncode({'email': _email.text, 'password': _password.text});
+  //         jsonEncode({'email': _email.text, 'password': _password.text});
   //     final response =
-  //     await http.post(Uri.parse("http://35.77.144.191/login"), body: body);
+  //         await http.post(Uri.parse("http://35.77.144.191/login"), body: body);
   //     if (response.statusCode == 200) {
   //       Navigator.push(
   //           context, MaterialPageRoute(builder: (context) => MenuPage()));
@@ -266,7 +250,7 @@ class _LoginScreenState extends State<LoginScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           _buildSocialBtn(
-                () => print('Login with Kakao'),
+            () => print('Login with Kakao'),
             const AssetImage("assets/kakaoLogo.jpg"),
           ),
           // _buildSocialBtn(
