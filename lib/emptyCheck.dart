@@ -3,6 +3,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sm7/custom_icons.dart';
 import 'package:sm7/utilities/constants(login).dart';
 
 class EmptyCheck extends StatefulWidget {
@@ -14,7 +15,7 @@ final Map<String, dynamic> jsonString2 = {
   'table1': {
     //테이블1
     'chair': {
-      'up': 0, //0빈자리, 1마스크한사람, 2마스크안한사람, 3error
+      'up': 2, //0빈자리, 1마스크한사람, 2마스크안한사람, 3error
       'down': 1
     },
     'object': {
@@ -27,7 +28,7 @@ final Map<String, dynamic> jsonString2 = {
   'table2': {
     //테이블2
     'chair': {
-      'up': 0, //0빈자리, 1마스크한사람, 2마스크안한사람, 3error
+      'up':2, //0빈자리, 1마스크한사람, 2마스크안한사람, 3error
       'down': 0
     },
     'object': {
@@ -53,6 +54,7 @@ final Map<String, dynamic> jsonString2 = {
 };
 //바뀐거로
 
+
 class myPainter extends CustomPainter {
   String target;
   myPainter(this.target);
@@ -74,24 +76,44 @@ class myPainter extends CustomPainter {
   }
 
   void _noperson(Canvas canvas, Size size) {
-    Paint paint = Paint()
-      ..color = Colors.grey
-      ..style = PaintingStyle.fill;
-    canvas.drawCircle(Offset(0, 0), 20, paint);
+    final icon = Icons.chair_outlined;
+    TextPainter textPainter = TextPainter(textDirection: TextDirection.rtl);
+    textPainter.text = TextSpan(text: String.fromCharCode(icon.codePoint),
+        style: TextStyle(fontSize: 50.0,fontFamily: icon.fontFamily, color : Colors.grey[600]));
+    textPainter.layout();
+    textPainter.paint(canvas, Offset(-25,-25));
+    // Paint paint = Paint()
+    //   ..color = Colors.grey
+    //   ..style = PaintingStyle.fill;
+    // canvas.drawCircle(Offset(0, 0), 20, paint);
   }
 
   void _person_mask(Canvas canvas, Size size) {
-    Paint paint = Paint()
-      ..color = Colors.blue
-      ..style = PaintingStyle.fill;
-    canvas.drawCircle(Offset(0, 0), 20, paint);
+    // final icon = Icons.masks;
+    final icon = CustomIcons.mask2;
+    TextPainter textPainter = TextPainter(textDirection: TextDirection.rtl);
+    textPainter.text = TextSpan(text: String.fromCharCode(icon.codePoint),
+        style: TextStyle(fontSize: 60.0,fontFamily: icon.fontFamily, color : Colors.green));
+    textPainter.layout();
+    textPainter.paint(canvas, Offset(-30,-30));
+    // Paint paint = Paint();
+    //   ..color = Colors.blue
+    //   ..style = PaintingStyle.fill;
+    // canvas.drawCircle(Offset(0, 0), 20, paint);
   }
 
   void _person_nomask(Canvas canvas, Size size) {
-    Paint paint = Paint()
-      ..color = Colors.red
-      ..style = PaintingStyle.fill;
-    canvas.drawCircle(Offset(0, 0), 20, paint);
+    // final icon = Icons.person_outlined;
+    final icon = CustomIcons.mask2_2;
+    TextPainter textPainter = TextPainter(textDirection: TextDirection.rtl);
+    textPainter.text = TextSpan(text: String.fromCharCode(icon.codePoint),
+        style: TextStyle(fontSize: 60.0,fontFamily: icon.fontFamily, color : Colors.red));
+    textPainter.layout();
+    textPainter.paint(canvas, Offset(-30,-30));
+    // Paint paint = Paint()
+    //   ..color = Colors.red
+    //   ..style = PaintingStyle.fill;
+    // canvas.drawCircle(Offset(0, 0), 20, paint);
   }
 
   void table1_person(Canvas canvas, Size size) {
@@ -175,6 +197,7 @@ class myPainter extends CustomPainter {
     }
   }
 
+  // 테이블과 사람을 확인하여 빈자리 유무 확인
   void table1(Canvas canvas, Size size) {
     if (target == 't1' && jsonString2["table1"].keys.elementAt(1) == "object") {
       if ((jsonString2["table1"]['object']['notebook'] == 0) &&
@@ -194,11 +217,11 @@ class myPainter extends CustomPainter {
   void table2(Canvas canvas, Size size) {
     if (target == 't2' && jsonString2["table2"].keys.elementAt(1) == "object") {
       if ((jsonString2["table2"]['object']['notebook'] == 0) &&
-      (jsonString2["table2"]['object']['book'] == 0) &&
-      (jsonString2["table2"]['object']['bag'] == 0) &&
-      (jsonString2["table2"]['object']['cup'] == 0) &&
-      (jsonString2["table2"]['chair']['up'] == 0) &&
-      (jsonString2["table2"]['chair']['down'] == 0)
+          (jsonString2["table2"]['object']['book'] == 0) &&
+          (jsonString2["table2"]['object']['bag'] == 0) &&
+          (jsonString2["table2"]['object']['cup'] == 0) &&
+          (jsonString2["table2"]['chair']['up'] == 0) &&
+          (jsonString2["table2"]['chair']['down'] == 0)
       ) {
         _emptytable(canvas, size);
       } else {
@@ -210,11 +233,11 @@ class myPainter extends CustomPainter {
   void table3(Canvas canvas, Size size) {
     if (target == 't3' && jsonString2["table1"].keys.elementAt(1) == "object") {
       if ((jsonString2["table3"]['object']['notebook'] == 0) &&
-      (jsonString2["table3"]['object']['book'] == 0) &&
-      (jsonString2["table3"]['object']['bag'] == 0) &&
-      (jsonString2["table3"]['object']['cup'] == 0) &&
-      (jsonString2["table3"]['chair']['up'] == 0) &&
-      (jsonString2["table3"]['chair']['down'] == 0)
+          (jsonString2["table3"]['object']['book'] == 0) &&
+          (jsonString2["table3"]['object']['bag'] == 0) &&
+          (jsonString2["table3"]['object']['cup'] == 0) &&
+          (jsonString2["table3"]['chair']['up'] == 0) &&
+          (jsonString2["table3"]['chair']['down'] == 0)
       ) {
         _emptytable(canvas, size);
       } else {
@@ -313,7 +336,7 @@ class _EmptyCheckState extends State<EmptyCheck> {
                             ),
                           ),
                           SizedBox(
-                            height: 70,
+                            height: 80,
                           ),
                           Container(
                             // alignment: Alignment.center,
@@ -340,7 +363,7 @@ class _EmptyCheckState extends State<EmptyCheck> {
                             ),
                           ),
                           SizedBox(
-                            height: 70,
+                            height: 80,
                           ),
                           Container(
                             // alignment: Alignment.center,
