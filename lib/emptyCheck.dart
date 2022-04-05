@@ -16,11 +16,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final title = 'WebSocket Demo';
     return MaterialApp(
-      home : EmptyCheck(
-        title : title,
-        channel: IOWebSocketChannel.connect("ws://35.77.144.191/ws/detectData")
-      )
-    );
+        home: EmptyCheck(
+            title: title,
+            channel: IOWebSocketChannel.connect(
+                "ws://35.77.144.191/ws/detectData")));
   }
 }
 
@@ -34,52 +33,52 @@ class EmptyCheck extends StatefulWidget {
 }
 
 final Map<String, dynamic> jsonString2 = {
-  // 'table1': {
-  //   //테이블1
-  //   'chair': {
-  //     'up': 2, //0빈자리, 1마스크한사람, 2마스크안한사람, 3error
-  //     'down': 0
-  //   },
-  //   'object': {
-  //     "notebook": 0, //노트북 갯수
-  //     "book": 0, //책 갯수
-  //     "bag": 0, //가방 갯수
-  //     "cup": 0 // 컵 갯수
-  //   }
-  // },
-  // 'table2': {
-  //   //테이블2
-  //   'chair': {
-  //     'up':2, //0빈자리, 1마스크한사람, 2마스크안한사람, 3error
-  //     'down': 0
-  //   },
-  //   'object': {
-  //     "notebook": 2, //노트북 갯수
-  //     "book": 0, //책 갯수
-  //     "bag": 0, //가방 갯수
-  //     "cup": 0 // 컵 갯수
-  //   }
-  // },
-  // 'table3': {
-  //   //테이블3
-  //   'chair': {
-  //     'up': 1, //0빈자리, 1마스크한사람, 2마스크안한사람, 3error
-  //     'down': 3
-  //   },
-  //   'object': {
-  //     "notebook": 1, //노트북 갯수
-  //     "book": 0, //책 갯수
-  //     "bag": 2, //가방 갯수
-  //     "cup": 2 // 컵 갯수
-  //   }
-  // }
+//   'table1': {
+//     //테이블1
+//     'chair': {
+//       'up': 2, //0빈자리, 1마스크한사람, 2마스크안한사람, 3error
+//       'down': 0
+//     },
+//     'object': {
+//       "notebook": 0, //노트북 갯수
+//       "book": 0, //책 갯수
+//       "bag": 0, //가방 갯수
+//       "cup": 0 // 컵 갯수
+//     }
+//   },
+//   'table2': {
+//     //테이블2
+//     'chair': {
+//       'up':2, //0빈자리, 1마스크한사람, 2마스크안한사람, 3error
+//       'down': 0
+//     },
+//     'object': {
+//       "notebook": 2, //노트북 갯수
+//       "book": 0, //책 갯수
+//       "bag": 0, //가방 갯수
+//       "cup": 0 // 컵 갯수
+//     }
+//   },
+//   'table3': {
+//     //테이블3
+//     'chair': {
+//       'up': 1, //0빈자리, 1마스크한사람, 2마스크안한사람, 3error
+//       'down': 3
+//     },
+//     'object': {
+//       "notebook": 1, //노트북 갯수
+//       "book": 0, //책 갯수
+//       "bag": 2, //가방 갯수
+//       "cup": 2 // 컵 갯수
+//     }
+//   }
 };
 //바뀐거로
 
-
 class myPainter extends CustomPainter {
   String target;
-  myPainter(this.target);
+  Map<String, dynamic>? jsonString3;
+  myPainter(this.target, this.jsonString3);
 
   void _emptytable(Canvas canvas, Size size) {
     Paint paint = Paint()
@@ -100,10 +99,14 @@ class myPainter extends CustomPainter {
   void _noperson(Canvas canvas, Size size) {
     final icon = Icons.chair_outlined;
     TextPainter textPainter = TextPainter(textDirection: TextDirection.rtl);
-    textPainter.text = TextSpan(text: String.fromCharCode(icon.codePoint),
-        style: TextStyle(fontSize: 50.0,fontFamily: icon.fontFamily, color : Colors.grey[600]));
+    textPainter.text = TextSpan(
+        text: String.fromCharCode(icon.codePoint),
+        style: TextStyle(
+            fontSize: 50.0,
+            fontFamily: icon.fontFamily,
+            color: Colors.grey[600]));
     textPainter.layout();
-    textPainter.paint(canvas, Offset(-25,-25));
+    textPainter.paint(canvas, Offset(-25, -25));
     // Paint paint = Paint()
     //   ..color = Colors.grey
     //   ..style = PaintingStyle.fill;
@@ -114,10 +117,12 @@ class myPainter extends CustomPainter {
     // final icon = Icons.masks;
     final icon = CustomIcons.mask2;
     TextPainter textPainter = TextPainter(textDirection: TextDirection.rtl);
-    textPainter.text = TextSpan(text: String.fromCharCode(icon.codePoint),
-        style: TextStyle(fontSize: 60.0,fontFamily: icon.fontFamily, color : Colors.green));
+    textPainter.text = TextSpan(
+        text: String.fromCharCode(icon.codePoint),
+        style: TextStyle(
+            fontSize: 60.0, fontFamily: icon.fontFamily, color: Colors.green));
     textPainter.layout();
-    textPainter.paint(canvas, Offset(-30,-30));
+    textPainter.paint(canvas, Offset(-30, -30));
     // Paint paint = Paint();
     //   ..color = Colors.blue
     //   ..style = PaintingStyle.fill;
@@ -128,10 +133,12 @@ class myPainter extends CustomPainter {
     // final icon = Icons.person_outlined;
     final icon = CustomIcons.mask2_2;
     TextPainter textPainter = TextPainter(textDirection: TextDirection.rtl);
-    textPainter.text = TextSpan(text: String.fromCharCode(icon.codePoint),
-        style: TextStyle(fontSize: 60.0,fontFamily: icon.fontFamily, color : Colors.red));
+    textPainter.text = TextSpan(
+        text: String.fromCharCode(icon.codePoint),
+        style: TextStyle(
+            fontSize: 60.0, fontFamily: icon.fontFamily, color: Colors.red));
     textPainter.layout();
-    textPainter.paint(canvas, Offset(-30,-30));
+    textPainter.paint(canvas, Offset(-30, -30));
     // Paint paint = Paint()
     //   ..color = Colors.red
     //   ..style = PaintingStyle.fill;
@@ -227,8 +234,7 @@ class myPainter extends CustomPainter {
           (jsonString2["table1"]['object']['bag'] == 0) &&
           (jsonString2["table1"]['object']['cup'] == 0) &&
           (jsonString2["table1"]['chair']['up'] == 0) &&
-          (jsonString2["table1"]['chair']['down'] == 0)
-      ) {
+          (jsonString2["table1"]['chair']['down'] == 0)) {
         _emptytable(canvas, size);
       } else {
         _table(canvas, size);
@@ -243,8 +249,7 @@ class myPainter extends CustomPainter {
           (jsonString2["table2"]['object']['bag'] == 0) &&
           (jsonString2["table2"]['object']['cup'] == 0) &&
           (jsonString2["table2"]['chair']['up'] == 0) &&
-          (jsonString2["table2"]['chair']['down'] == 0)
-      ) {
+          (jsonString2["table2"]['chair']['down'] == 0)) {
         _emptytable(canvas, size);
       } else {
         _table(canvas, size);
@@ -259,8 +264,7 @@ class myPainter extends CustomPainter {
           (jsonString2["table3"]['object']['bag'] == 0) &&
           (jsonString2["table3"]['object']['cup'] == 0) &&
           (jsonString2["table3"]['chair']['up'] == 0) &&
-          (jsonString2["table3"]['chair']['down'] == 0)
-      ) {
+          (jsonString2["table3"]['chair']['down'] == 0)) {
         _emptytable(canvas, size);
       } else {
         _table(canvas, size);
@@ -325,106 +329,114 @@ class _EmptyCheckState extends State<EmptyCheck> {
                   ),
                 ),
               ),
-              SafeArea(
-                child: Center(
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          // StreamBuilder(
-                          //   stream: widget.channel.stream,
-                          //   builder: (context, snapshot) {
-                          //     return Padding(
-                          //       padding: const EdgeInsets.symmetric(vertical: 24.0),
-                          //       child: Text(snapshot.hasData ? '${snapshot.data}' : ''),
-                          //     );
-                          //   },
-                          // ),
-                          SizedBox(
-                            height: 80,
-                          ),
-                          Container(
-                            // alignment: Alignment.center,
-                            child: CustomPaint(
-                              painter: myPainter("p1"),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 50,
-                          ),
-                          Container(
-                            // alignment: Alignment.center,
-                            child: CustomPaint(
-                              painter: myPainter("t1"),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 50,
-                          ),
-                          Container(
-                            // alignment: Alignment.center,
-                            child: CustomPaint(
-                              painter: myPainter("p2"),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 80,
-                          ),
-                          Container(
-                            // alignment: Alignment.center,
-                            child: CustomPaint(
-                              painter: myPainter("p3"),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 50,
-                          ),
-                          Container(
-                            // alignment: Alignment.center,
-                            child: CustomPaint(
-                              painter: myPainter("t2"),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 50,
-                          ),
-                          Container(
-                            // alignment: Alignment.center,
-                            child: CustomPaint(
-                              painter: myPainter("p4"),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 80,
-                          ),
-                          Container(
-                            // alignment: Alignment.center,
-                            child: CustomPaint(
-                              painter: myPainter("p5"),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 50,
-                          ),
-                          Container(
-                            // alignment: Alignment.center,
-                            child: CustomPaint(
-                              painter: myPainter("t3"),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 50,
-                          ),
-                          Container(
-                            // alignment: Alignment.center,
-                            child: CustomPaint(
-                              painter: myPainter("p6"),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 80,
-                          ),
-                        ])),
-              )
+              StreamBuilder(
+                stream: widget.channel.stream,
+                builder: (context, snapshot) {
+                  return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 24.0),
+                      child: SafeArea(
+                        child: Center(
+                            child: Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                              SizedBox(
+                                height: 80,
+                              ),
+                              Container(
+                                // alignment: Alignment.center,
+                                child: CustomPaint(
+                                  painter: myPainter(
+                                      "p1", jsonDecode('${snapshot.data}')),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 50,
+                              ),
+                              Container(
+                                // alignment: Alignment.center,
+                                child: CustomPaint(
+                                  painter: myPainter(
+                                      "t1", jsonDecode('${snapshot.data}')),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 50,
+                              ),
+                              Container(
+                                // alignment: Alignment.center,
+                                child: CustomPaint(
+                                  painter: myPainter(
+                                      "p2", jsonDecode('${snapshot.data}')),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 80,
+                              ),
+                              Container(
+                                // alignment: Alignment.center,
+                                child: CustomPaint(
+                                  painter: myPainter(
+                                      "p3", jsonDecode('${snapshot.data}')),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 50,
+                              ),
+                              Container(
+                                // alignment: Alignment.center,
+                                child: CustomPaint(
+                                  painter: myPainter(
+                                      "t2", jsonDecode('${snapshot.data}')),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 50,
+                              ),
+                              Container(
+                                // alignment: Alignment.center,
+                                child: CustomPaint(
+                                  painter: myPainter(
+                                      "p4", jsonDecode('${snapshot.data}')),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 80,
+                              ),
+                              Container(
+                                // alignment: Alignment.center,
+                                child: CustomPaint(
+                                  painter: myPainter(
+                                      "p5", jsonDecode('${snapshot.data}')),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 50,
+                              ),
+                              Container(
+                                // alignment: Alignment.center,
+                                child: CustomPaint(
+                                  painter: myPainter(
+                                      "t3", jsonDecode('${snapshot.data}')),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 50,
+                              ),
+                              Container(
+                                // alignment: Alignment.center,
+                                child: CustomPaint(
+                                  painter: myPainter(
+                                      "p6", jsonDecode('${snapshot.data}')),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 80,
+                              ),
+                            ])),
+                      ));
+                },
+              ),
             ],
           ),
         ),
