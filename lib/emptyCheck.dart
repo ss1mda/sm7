@@ -5,52 +5,74 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sm7/custom_icons.dart';
 import 'package:sm7/utilities/constants(login).dart';
+import 'package:flutter/foundation.dart';
+import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final title = 'WebSocket Demo';
+    return MaterialApp(
+      home : EmptyCheck(
+        title : title,
+        channel: IOWebSocketChannel.connect("ws://35.77.144.191/ws/detectData")
+      )
+    );
+  }
+}
 
 class EmptyCheck extends StatefulWidget {
+  final String title;
+  final WebSocketChannel channel;
+  EmptyCheck({Key? key, required this.title, required this.channel})
+      : super(key: key);
   @override
   _EmptyCheckState createState() => _EmptyCheckState();
 }
 
 final Map<String, dynamic> jsonString2 = {
-  'table1': {
-    //테이블1
-    'chair': {
-      'up': 2, //0빈자리, 1마스크한사람, 2마스크안한사람, 3error
-      'down': 1
-    },
-    'object': {
-      "notebook": 0, //노트북 갯수
-      "book": 0, //책 갯수
-      "bag": 0, //가방 갯수
-      "cup": 0 // 컵 갯수
-    }
-  },
-  'table2': {
-    //테이블2
-    'chair': {
-      'up':2, //0빈자리, 1마스크한사람, 2마스크안한사람, 3error
-      'down': 0
-    },
-    'object': {
-      "notebook": 2, //노트북 갯수
-      "book": 0, //책 갯수
-      "bag": 0, //가방 갯수
-      "cup": 0 // 컵 갯수
-    }
-  },
-  'table3': {
-    //테이블3
-    'chair': {
-      'up': 1, //0빈자리, 1마스크한사람, 2마스크안한사람, 3error
-      'down': 3
-    },
-    'object': {
-      "notebook": 1, //노트북 갯수
-      "book": 0, //책 갯수
-      "bag": 2, //가방 갯수
-      "cup": 2 // 컵 갯수
-    }
-  }
+  // 'table1': {
+  //   //테이블1
+  //   'chair': {
+  //     'up': 2, //0빈자리, 1마스크한사람, 2마스크안한사람, 3error
+  //     'down': 0
+  //   },
+  //   'object': {
+  //     "notebook": 0, //노트북 갯수
+  //     "book": 0, //책 갯수
+  //     "bag": 0, //가방 갯수
+  //     "cup": 0 // 컵 갯수
+  //   }
+  // },
+  // 'table2': {
+  //   //테이블2
+  //   'chair': {
+  //     'up':2, //0빈자리, 1마스크한사람, 2마스크안한사람, 3error
+  //     'down': 0
+  //   },
+  //   'object': {
+  //     "notebook": 2, //노트북 갯수
+  //     "book": 0, //책 갯수
+  //     "bag": 0, //가방 갯수
+  //     "cup": 0 // 컵 갯수
+  //   }
+  // },
+  // 'table3': {
+  //   //테이블3
+  //   'chair': {
+  //     'up': 1, //0빈자리, 1마스크한사람, 2마스크안한사람, 3error
+  //     'down': 3
+  //   },
+  //   'object': {
+  //     "notebook": 1, //노트북 갯수
+  //     "book": 0, //책 갯수
+  //     "bag": 2, //가방 갯수
+  //     "cup": 2 // 컵 갯수
+  //   }
+  // }
 };
 //바뀐거로
 
@@ -308,6 +330,15 @@ class _EmptyCheckState extends State<EmptyCheck> {
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
+                          // StreamBuilder(
+                          //   stream: widget.channel.stream,
+                          //   builder: (context, snapshot) {
+                          //     return Padding(
+                          //       padding: const EdgeInsets.symmetric(vertical: 24.0),
+                          //       child: Text(snapshot.hasData ? '${snapshot.data}' : ''),
+                          //     );
+                          //   },
+                          // ),
                           SizedBox(
                             height: 80,
                           ),
