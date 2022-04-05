@@ -35,6 +35,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   http: ^0.13.4
+  web_socket_channel : ^2.1.0
 
 dev_dependencies:
   flutter_test:
@@ -55,12 +56,15 @@ flutter:
   uses-material-design: true
 
   assets:
-   - assets/
-   - assets/kakaoLogo.jpg
-   - assets/test01.json
+    - assets/
+    - assets/kakaoLogo.jpg
+    - assets/test01.json
 
 
   fonts:
     - family: OpenSans
       fonts:
         - asset: assets/fonts/OpenSans.ttf
+    - family: CustomIcons
+      fonts:
+        - asset: assets/fonts/CustomIcons.ttf

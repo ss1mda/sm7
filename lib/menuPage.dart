@@ -75,7 +75,7 @@ class _MenuPageState extends State<MenuPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => EmptyCheck()));
+                                builder: (context) => DetectPage()));
                       },
                     ),
                     SizedBox(height: 75.0),
@@ -91,7 +91,7 @@ class _MenuPageState extends State<MenuPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => EmptyCheck()));
+                                builder: (context) => MyApp()));
                       },
                     )
                   ],
