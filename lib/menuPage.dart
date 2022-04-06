@@ -67,7 +67,11 @@ class _MenuPageState extends State<MenuPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
+<<<<<<< HEAD
                                 builder: (context) => LiveFeed(cameras!)));
+=======
+                                builder: (context) => DetectPage()));
+>>>>>>> 8ee9ce064eba5e427e776799e961cabb496570fb
                       },
                     ),
                     SizedBox(height: 75.0),
@@ -83,7 +87,11 @@ class _MenuPageState extends State<MenuPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
+<<<<<<< HEAD
                                 builder: (context) => EmptyCheck_first()));
+=======
+                                builder: (context) => MyApp()));
+>>>>>>> 8ee9ce064eba5e427e776799e961cabb496570fb
                       },
                     )
                   ],
