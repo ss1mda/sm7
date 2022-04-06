@@ -1,13 +1,17 @@
 // ignore_for_file: prefer_const_constructors
-
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sm7/detectPage.dart';
-import 'package:sm7/emptyCheck.dart';
-import 'package:sm7/utilities/constants(login).dart';
+import 'package:sm7/enterance/live_camera.dart';
+import 'package:sm7/inside/emptyCheck.dart';
+
+import 'main.dart';
+
 
 class MenuPage extends StatefulWidget {
-  const MenuPage({Key? key}) : super(key: key);
+  final List<CameraDescription> cameras;
+  MenuPage(this.cameras);
+  // const MenuPage({Key? key}) : super(key: key);
 
   @override
   _MenuPageState createState() => _MenuPageState();
@@ -22,18 +26,6 @@ class _MenuPageState extends State<MenuPage> {
         backgroundColor: Colors.black,
         centerTitle: true,
         elevation: 0.0,
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: const [
-            UserAccountsDrawerHeader(
-              accountName: Text("강남2호점"),
-              accountEmail: Text("강남2호점@ediya.com"),
-              decoration: BoxDecoration(color: Colors.black),
-            ),
-          ],
-        ),
       ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
@@ -65,7 +57,7 @@ class _MenuPageState extends State<MenuPage> {
                     ElevatedButton.icon(
                       icon: Icon(Icons.door_sliding_outlined,
                           size: 50.0, color: Colors.white),
-                      label: Text(" 출입 마스크 확인",
+                      label: Text(" 출입   마스크   확인",
                           style: TextStyle(fontSize: 25.0)),
                       style: ElevatedButton.styleFrom(
                           primary: Colors.black,
@@ -75,7 +67,7 @@ class _MenuPageState extends State<MenuPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => DetectPage()));
+                                builder: (context) => LiveFeed(cameras!)));
                       },
                     ),
                     SizedBox(height: 75.0),
@@ -91,7 +83,7 @@ class _MenuPageState extends State<MenuPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => EmptyCheck()));
+                                builder: (context) => EmptyCheck_first()));
                       },
                     )
                   ],
