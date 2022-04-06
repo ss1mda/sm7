@@ -23,18 +23,6 @@ class _MenuPageState extends State<MenuPage> {
         centerTitle: true,
         elevation: 0.0,
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: const [
-            UserAccountsDrawerHeader(
-              accountName: Text("강남2호점"),
-              accountEmail: Text("강남2호점@ediya.com"),
-              decoration: BoxDecoration(color: Colors.black),
-            ),
-          ],
-        ),
-      ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: GestureDetector(
@@ -65,7 +53,7 @@ class _MenuPageState extends State<MenuPage> {
                     ElevatedButton.icon(
                       icon: Icon(Icons.door_sliding_outlined,
                           size: 50.0, color: Colors.white),
-                      label: Text(" 출입 마스크 확인",
+                      label: Text(" 출입   마스크   확인",
                           style: TextStyle(fontSize: 25.0)),
                       style: ElevatedButton.styleFrom(
                           primary: Colors.black,
@@ -75,7 +63,7 @@ class _MenuPageState extends State<MenuPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => MyApp()));
+                                builder: (context) => EmptyCheck_first()));
                       },
                     ),
                     SizedBox(height: 75.0),
@@ -91,7 +79,7 @@ class _MenuPageState extends State<MenuPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => MyApp()));
+                                builder: (context) => EmptyCheck_first()));
                       },
                     )
                   ],
