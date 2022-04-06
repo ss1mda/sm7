@@ -5,7 +5,7 @@ import 'package:sm7/enterance/camera.dart';
 import 'dart:math' as math;
 import 'package:tflite/tflite.dart';
 
-
+//실시간 카메라
 class LiveFeed extends StatefulWidget {
   final List<CameraDescription> cameras;
   LiveFeed(this.cameras);
@@ -19,15 +19,15 @@ class _LiveFeedState extends State<LiveFeed> {
   int _imageHeight = 0;
   int _imageWidth = 0;
 
+  //tflite 모델 load
   loadTfModel() async {
     await Tflite.loadModel(
       model: "assets/ssd_mobilenet.tflite",
       labels: "assets/ssd_mobilenet.txt",
     );
   }
-  /*
-  The set recognitions function assigns the values of recognitions, imageHeight and width to the variables defined here as callback
-  */
+
+  //인식하기위한 이미지 크기 세팅
   setRecognitions(recognitions, imageHeight, imageWidth) {
     setState(() {
       _recognitions = recognitions;
@@ -54,8 +54,8 @@ class _LiveFeedState extends State<LiveFeed> {
       ),
       body: Stack(
         children: <Widget>[
-          CameraFeed(widget.cameras, setRecognitions),
-          BoundingBox(
+          CameraFeed(widget.cameras, setRecognitions),  //카메라작동(camera.dart)
+          BoundingBox( //박스 그리기(bounding_box)
             _recognitions == null ? [] : _recognitions!,
             math.max(_imageHeight, _imageWidth),
             math.min(_imageHeight, _imageWidth),

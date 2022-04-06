@@ -36,16 +36,10 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
 
   cupertino_icons: ^1.0.2
-  camera: ^0.9.4+19
   tflite: ^1.1.1
   http: ^0.13.4
-<<<<<<< HEAD
   web_socket_channel: ^2.1.0
-
-=======
-  web_socket_channel : ^2.1.0
   camera: ^0.9.4+19
->>>>>>> 8ee9ce064eba5e427e776799e961cabb496570fb
 
 dev_dependencies:
   flutter_test:
@@ -66,14 +60,7 @@ flutter:
   uses-material-design: true
 
   assets:
-<<<<<<< HEAD
    - assets/
-=======
-    - assets/
-    - assets/kakaoLogo.jpg
-    - assets/test01.json
-
->>>>>>> 8ee9ce064eba5e427e776799e961cabb496570fb
 
   fonts:
     - family: OpenSans
@@ -81,8 +68,4 @@ flutter:
         - asset: assets/fonts/OpenSans.ttf
     - family: CustomIcons
       fonts:
-<<<<<<< HEAD
         - asset: assets/fonts/CustomIcons.ttf
-=======
-        - asset: assets/fonts/CustomIcons.ttf
->>>>>>> 8ee9ce064eba5e427e776799e961cabb496570fb
