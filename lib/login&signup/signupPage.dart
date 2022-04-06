@@ -5,8 +5,8 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:sm7/utilities/constants(login).dart';
-import 'package:sm7/model/userModel.dart';
+import 'package:sm7/login&signup/utility/constants(login).dart';
+import 'package:sm7/login&signup/model/userModel.dart';
 import 'package:sm7/login&signup/loginPage.dart';
 import 'package:http/http.dart' as http;
 

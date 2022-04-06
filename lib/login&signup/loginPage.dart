@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sm7/login&signup/signupPage.dart';
 import 'package:sm7/menuPage.dart';
-import 'package:sm7/utilities/constants(login).dart';
+import 'package:sm7/login&signup/utility/constants(login).dart';
 import 'dart:async';
 import '../main.dart';
 
