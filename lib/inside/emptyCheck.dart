@@ -30,7 +30,6 @@ class EmptyCheck extends StatefulWidget {
   _EmptyCheckState createState() => _EmptyCheckState();
 }
 
-Map<String, dynamic>? result;
 //초기값
 Map<String, dynamic>? yolo_result = {
   // 테이블 / 0빈자리, 1마스크한사람, 2마스크안한사람 /  3error 노트북 갯수, 책 갯수, 가방 갯수, 컵 갯수
@@ -312,17 +311,13 @@ class _EmptyCheckState extends State<EmptyCheck> {
               ),
               // Visibility(child: Text(yolo_result.toString()),visible: true),
               StreamBuilder(
-                // initialData: yolo_result_initial,
                 stream: widget.channel?.stream,
                 builder: (context, snapshot) {
                   if (snapshot.data == null) {
+                    //서버 연결 중일때 로딩 표시
                     return Center(child: CircularProgressIndicator());
-                    //   Container(
-                    //     child: Center(
-                    //         child:
-                    //         Text( "Loading...", style: TextStyle(fontSize: 25, color: Colors.white),
-                    // )));
                   } else
+                    //서버 연결되서 값 들어오면 결과 값 저장
                     yolo_result = jsonDecode('${snapshot.data}');
                   return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 24.0),

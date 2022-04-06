@@ -28,7 +28,7 @@ class _CameraFeedState extends State<CameraFeed> {
       print('No Cameras Found.');
     } else {
       controller = new CameraController(
-        widget.cameras[0],
+        widget.cameras[1],
         ResolutionPreset.high,
       );
       controller?.initialize().then((_) {
@@ -42,13 +42,14 @@ class _CameraFeedState extends State<CameraFeed> {
             isDetecting = true;
             Tflite.detectObjectOnFrame(
               bytesList: img.planes.map((plane) {return plane.bytes;}).toList(),
-              model: "SSDMobileNet", //yolo 변경 가능
+              //model: "SSDMobileNet", //YOLO, SSDMobileNet
               imageHeight: img.height,
               imageWidth: img.width,
               imageMean: 127.5,
               imageStd: 127.5,
-              numResultsPerClass: 1,
-              threshold: 0.4,
+              rotation: 90,
+              numResultsPerClass: 5,
+              threshold: 0.1,
             ).then((recognitions) {
               /*
               When setRecognitions is called here, the parameters are being passed on to the parent widget as callback. i.e. to the LiveFeed class

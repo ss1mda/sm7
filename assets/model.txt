@@ -1,3 +1,2 @@
-mask
-nomask
-error
+Mask
+Nomask

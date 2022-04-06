@@ -22,8 +22,12 @@ class _LiveFeedState extends State<LiveFeed> {
   //tflite 모델 load
   loadTfModel() async {
     await Tflite.loadModel(
-      model: "assets/ssd_mobilenet.tflite",
-      labels: "assets/ssd_mobilenet.txt",
+      // model: "assets/ssd_mobilenet.tflite", //컴퓨터,노트북 등 싹다 판단
+      // model: "assets/model4.tflite", //mask판단
+      model: "assets/ssdlite_mobilenet_v2.tflite", //mask판단
+      // labels: "assets/ssd_mobilenet.txt",
+      // labels: "assets/model.txt", //Mask,Nomask
+      labels: "assets/model2.txt",
     );
   }
 
@@ -54,8 +58,10 @@ class _LiveFeedState extends State<LiveFeed> {
       ),
       body: Stack(
         children: <Widget>[
-          CameraFeed(widget.cameras, setRecognitions),  //카메라작동(camera.dart)
-          BoundingBox( //박스 그리기(bounding_box)
+          //카메라작동(camera.dart)
+          CameraFeed(widget.cameras, setRecognitions),
+          //박스 그리기(bounding_box)
+          BoundingBox(
             _recognitions == null ? [] : _recognitions!,
             math.max(_imageHeight, _imageWidth),
             math.min(_imageHeight, _imageWidth),
