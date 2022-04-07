@@ -68,6 +68,7 @@ class _MenuPageState extends State<MenuPage> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => LiveFeed(cameras!)));
+                                // builder: (context) => EmptyCheck_first()));
                       },
                     ),
                     SizedBox(height: 75.0),

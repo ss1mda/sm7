@@ -3,8 +3,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sm7/inside/custom_icons.dart';
-import 'package:web_socket_channel/io.dart';
+import 'package:sm7/custom_icons.dart';
+// import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class EmptyCheck_first extends StatelessWidget {
@@ -14,9 +14,9 @@ class EmptyCheck_first extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         home: EmptyCheck(
-            //웹 소켓 채널 연결
-            channel: IOWebSocketChannel.connect(
-                "ws://35.77.144.191/ws/detectData")));
+          //웹 소켓 채널 연결
+            channel: WebSocketChannel.connect(
+                Uri.parse('ws://35.77.144.191/ws/detectData'))));
   }
 }
 
@@ -30,6 +30,7 @@ class EmptyCheck extends StatefulWidget {
   _EmptyCheckState createState() => _EmptyCheckState();
 }
 
+Map<String, dynamic>? result;
 //초기값
 Map<String, dynamic>? yolo_result = {
   // 테이블 / 0빈자리, 1마스크한사람, 2마스크안한사람 /  3error 노트북 갯수, 책 갯수, 가방 갯수, 컵 갯수
@@ -311,13 +312,17 @@ class _EmptyCheckState extends State<EmptyCheck> {
               ),
               // Visibility(child: Text(yolo_result.toString()),visible: true),
               StreamBuilder(
+                // initialData: yolo_result_initial,
                 stream: widget.channel?.stream,
                 builder: (context, snapshot) {
                   if (snapshot.data == null) {
-                    //서버 연결 중일때 로딩 표시
                     return Center(child: CircularProgressIndicator());
+                    //   Container(
+                    //     child: Center(
+                    //         child:
+                    //         Text( "Loading...", style: TextStyle(fontSize: 25, color: Colors.white),
+                    // )));
                   } else
-                    //서버 연결되서 값 들어오면 결과 값 저장
                     yolo_result = jsonDecode('${snapshot.data}');
                   return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 24.0),
@@ -325,97 +330,97 @@ class _EmptyCheckState extends State<EmptyCheck> {
                         child: Center(
                             child: Column(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
-                              Text(yolo_result.toString(),
-                                  style: TextStyle(
-                                      fontSize: 5,
-                                      color: Colors.black.withOpacity(0))),
-                              SizedBox(
-                                height: 45,
-                              ),
-                              Container(
-                                // alignment: Alignment.center,
-                                child: CustomPaint(
-                                  painter: myPainter("p1"),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 50,
-                              ),
-                              Container(
-                                // alignment: Alignment.center,
-                                child: CustomPaint(
-                                  painter: myPainter("t1"),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 50,
-                              ),
-                              Container(
-                                // alignment: Alignment.center,
-                                child: CustomPaint(
-                                  painter: myPainter("p2"),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 80,
-                              ),
-                              Container(
-                                // alignment: Alignment.center,
-                                child: CustomPaint(
-                                  painter: myPainter("p3"),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 50,
-                              ),
-                              Container(
-                                // alignment: Alignment.center,
-                                child: CustomPaint(
-                                  painter: myPainter("t2"),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 50,
-                              ),
-                              Container(
-                                // alignment: Alignment.center,
-                                child: CustomPaint(
-                                  painter: myPainter("p4"),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 80,
-                              ),
-                              Container(
-                                // alignment: Alignment.center,
-                                child: CustomPaint(
-                                  painter: myPainter("p5"),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 50,
-                              ),
-                              Container(
-                                // alignment: Alignment.center,
-                                child: CustomPaint(
-                                  painter: myPainter("t3"),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 50,
-                              ),
-                              Container(
-                                // alignment: Alignment.center,
-                                child: CustomPaint(
-                                  painter: myPainter("p6"),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 80,
-                              ),
-                            ])),
+                                  Text(yolo_result.toString(),
+                                      style: TextStyle(
+                                          fontSize: 5,
+                                          color: Colors.black.withOpacity(0))),
+                                  SizedBox(
+                                    height: 45,
+                                  ),
+                                  Container(
+                                    // alignment: Alignment.center,
+                                    child: CustomPaint(
+                                      painter: myPainter("p1"),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 50,
+                                  ),
+                                  Container(
+                                    // alignment: Alignment.center,
+                                    child: CustomPaint(
+                                      painter: myPainter("t1"),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 50,
+                                  ),
+                                  Container(
+                                    // alignment: Alignment.center,
+                                    child: CustomPaint(
+                                      painter: myPainter("p2"),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 80,
+                                  ),
+                                  Container(
+                                    // alignment: Alignment.center,
+                                    child: CustomPaint(
+                                      painter: myPainter("p3"),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 50,
+                                  ),
+                                  Container(
+                                    // alignment: Alignment.center,
+                                    child: CustomPaint(
+                                      painter: myPainter("t2"),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 50,
+                                  ),
+                                  Container(
+                                    // alignment: Alignment.center,
+                                    child: CustomPaint(
+                                      painter: myPainter("p4"),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 80,
+                                  ),
+                                  Container(
+                                    // alignment: Alignment.center,
+                                    child: CustomPaint(
+                                      painter: myPainter("p5"),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 50,
+                                  ),
+                                  Container(
+                                    // alignment: Alignment.center,
+                                    child: CustomPaint(
+                                      painter: myPainter("t3"),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 50,
+                                  ),
+                                  Container(
+                                    // alignment: Alignment.center,
+                                    child: CustomPaint(
+                                      painter: myPainter("p6"),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 80,
+                                  ),
+                                ])),
                       ));
                 },
               ),
