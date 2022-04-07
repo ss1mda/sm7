@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:convert';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,6 +9,7 @@ import 'package:sm7/menuPage.dart';
 import 'package:sm7/login&signup/utility/constants(login).dart';
 import 'dart:async';
 import '../main.dart';
+import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatefulWidget {
   final List<CameraDescription> cameras;
@@ -23,28 +25,23 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _password = TextEditingController();
 
   Future<void> loginUser() async {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => MenuPage(cameras!)));
+    if (_email.text.isNotEmpty && _password.text.isNotEmpty) {
+      final body =
+          jsonEncode({'email': _email.text, 'password': _password.text});
+      final response =
+          await http.post(Uri.parse("http://35.77.144.191:8001/login"), body: body);
+      if (response.statusCode == 200) {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => MenuPage(cameras!)));
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Invaild Credentials.")));
+      }
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Black Field Not Allowed")));
+    }
   }
-
-  // Future<void> loginUser() async {
-  //   if (_email.text.isNotEmpty && _password.text.isNotEmpty) {
-  //     final body =
-  //         jsonEncode({'email': _email.text, 'password': _password.text});
-  //     final response =
-  //         await http.post(Uri.parse("http://35.77.144.191/login"), body: body);
-  //     if (response.statusCode == 200) {
-  //       Navigator.push(
-  //           context, MaterialPageRoute(builder: (context) => MenuPage()));
-  //     } else {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //           const SnackBar(content: Text("Invaild Credentials.")));
-  //     }
-  //   } else {
-  //     ScaffoldMessenger.of(context)
-  //         .showSnackBar(SnackBar(content: Text("Black Field Not Allowed")));
-  //   }
-  // }
 
   Widget _buildEmailTF() {
     return Column(
@@ -61,12 +58,6 @@ class _LoginScreenState extends State<LoginScreen> {
           height: 60.0,
           child: TextFormField(
             controller: _email,
-            // validator: (val) {
-            //   if (val == null || val.isEmpty) {
-            //     return 'Enter email';
-            //   }
-            //   return null;
-            // },
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(
               color: Colors.white,
@@ -103,12 +94,6 @@ class _LoginScreenState extends State<LoginScreen> {
           height: 60.0,
           child: TextFormField(
             controller: _password,
-            // validator: (val) {
-            //   if (val == null || val.isEmpty) {
-            //     return 'Enter password';
-            //   }
-            //   return null;
-            // },
             obscureText: true,
             style: TextStyle(
               color: Colors.white,
@@ -256,12 +241,6 @@ class _LoginScreenState extends State<LoginScreen> {
             () => print('Login with Kakao'),
             const AssetImage("assets/kakaoLogo.jpg"),
           ),
-          // _buildSocialBtn(
-          //   () => print('Login with Google'),
-          //   AssetImage(
-          //     'assets/logos/google.jpg',
-          //   ),
-          // ),
         ],
       ),
     );

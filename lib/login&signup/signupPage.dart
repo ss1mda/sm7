@@ -22,7 +22,7 @@ class CreateAccount extends StatefulWidget {
 
 Future<UserModel> createAccount(
     String name, String email, String password) async {
-  String url = "http://35.77.144.191/accounts";
+  String url = "http://35.77.144.191:8001/accounts";
 
   final response = await http.post(Uri.parse(url),
       body: jsonEncode(<String, String>{

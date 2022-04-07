@@ -31,21 +31,21 @@ class EmptyCheck extends StatefulWidget {
 }
 
 //초기값
-Map<String, dynamic>? yolo_result = {
-  // 테이블 / 0빈자리, 1마스크한사람, 2마스크안한사람 /  3error 노트북 갯수, 책 갯수, 가방 갯수, 컵 갯수
-  'table1': {
-    'chair': {'up': 0, 'down': 0},
-    'object': {"notebook": 0, "book": 0, "bag": 0, "cup": 0}
-  },
-  'table2': {
-    'chair': {'up': 0, 'down': 0},
-    'object': {"notebook": 0, "book": 0, "bag": 0, "cup": 0}
-  },
-  'table3': {
-    'chair': {'up': 0, 'down': 0},
-    'object': {"notebook": 0, "book": 0, "bag": 0, "cup": 0}
-  }
-};
+Map<String, dynamic>? yolo_result;
+  // // 테이블 / 0빈자리, 1마스크한사람, 2마스크안한사람 /  3error 노트북 갯수, 책 갯수, 가방 갯수, 컵 갯수
+  // 'table1': {
+  //   'chair': {'up': 0, 'down': 0},
+  //   'object': {"notebook": 0, "book": 0, "bag": 0, "cup": 0}
+  // },
+  // 'table2': {
+  //   'chair': {'up': 0, 'down': 0},
+  //   'object': {"notebook": 0, "book": 0, "bag": 0, "cup": 0}
+  // },
+  // 'table3': {
+  //   'chair': {'up': 0, 'down': 0},
+  //   'object': {"notebook": 0, "book": 0, "bag": 0, "cup": 0}
+  // }
+
 
 // Map<String, dynamic>? yolo_result2 = yolo_result;
 
