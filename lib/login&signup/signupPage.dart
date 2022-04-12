@@ -2,13 +2,11 @@
 import 'dart:convert';
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:sm7/login&signup/utility/constants(login).dart';
 import 'package:sm7/login&signup/model/userModel.dart';
 import 'package:sm7/login&signup/loginPage.dart';
 import 'package:http/http.dart' as http;
-
 
 class CreateAccount extends StatefulWidget {
    const CreateAccount({Key? key}) : super(key: key);
@@ -16,8 +14,7 @@ class CreateAccount extends StatefulWidget {
   _CreateAccountState createState() => _CreateAccountState();
 }
 
-Future<UserModel> createAccount(
-    String name, String email, String password) async {
+Future<UserModel> createAccount( String name, String email, String password) async {
   String url = "http://35.77.144.191/accounts";
 
   final response = await http.post(Uri.parse(url),
@@ -120,8 +117,6 @@ class CustomDialog extends StatelessWidget {
 }
 
 class _CreateAccountState extends State<CreateAccount> {
-  bool _rememberMe = false;
-
   TextEditingController _name = TextEditingController();
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();

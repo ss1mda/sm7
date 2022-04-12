@@ -3,11 +3,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sm7/custom_icons.dart';
+import 'package:sm7/inside/icons/custom_icons.dart';
+import 'package:sm7/inside/draw/draw_person.dart';
+import 'package:sm7/inside/draw/draw_table.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class EmptyCheck extends StatefulWidget {
   const EmptyCheck({Key? key}) : super(key: key);
+
   @override
   _EmptyCheckState createState() => _EmptyCheckState();
 }
@@ -16,242 +19,100 @@ class EmptyCheck extends StatefulWidget {
 Map<String, dynamic>? yolo_result;
 
 class myPainter extends CustomPainter {
+  //아이콘 정의, 변수 선언
+  final chair_icon = Icons.chair_outlined;
+  final mask_icon = CustomIcons.mask2;
+  final nomask_icon = CustomIcons.mask2_2;
+  final error_icon = CustomIcons.error2_1;
   String target;
+
+  //생성자
   myPainter(this.target);
 
-  void _emptytable(Canvas canvas, Size size) {
-    Paint paint = Paint()
+  //사람그리기
+  void personPainter(Canvas canvas, Size size, String personResult) {
+    TextPainter textPainter = TextPainter(textDirection: TextDirection.rtl);
+    //사람 없음
+    if (personResult == "noperson") {
+      textPainter.text = TextSpan(
+          text: String.fromCharCode(chair_icon.codePoint),
+          style: TextStyle(
+              fontSize: 46.0,
+              fontFamily: chair_icon.fontFamily,
+              color: Colors.grey[600]));
+      textPainter.layout();
+      textPainter.paint(canvas, Offset(-23, -23));
+    } //마스크 착용
+    else if (personResult == "mask") {
+      textPainter.text = TextSpan(
+          text: String.fromCharCode(mask_icon.codePoint),
+          style: TextStyle(
+              fontSize: 48.0,
+              fontFamily: mask_icon.fontFamily,
+              color: Colors.green));
+      textPainter.layout();
+      textPainter.paint(canvas, Offset(-24, -24));
+    } //마스크 미착용
+    else if (personResult == "nomask") {
+      textPainter.text = TextSpan(
+          text: String.fromCharCode(nomask_icon.codePoint),
+          style: TextStyle(
+              fontSize: 48.0,
+              fontFamily: nomask_icon.fontFamily,
+              color: Colors.red));
+      textPainter.layout();
+      textPainter.paint(canvas, Offset(-24, -24));
+    } //error
+    else {
+      textPainter.text = TextSpan(
+          text: String.fromCharCode(error_icon.codePoint),
+          style: TextStyle(
+              fontSize: 44.0,
+              fontFamily: error_icon.fontFamily,
+              color: Colors.yellow));
+      textPainter.layout();
+      textPainter.paint(canvas, Offset(-22, -22));
+    }
+  }
+
+  //테이블 그리기
+  void tablePainter(Canvas canvas, Size size, String tableResult) {
+    //페인트 정의
+    Paint paint1 = Paint()
       ..color = Colors.grey
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.fill;
-    canvas.drawRect(Offset(-80, -24) & const Size(160, 48), paint);
-  }
-
-  void _table(Canvas canvas, Size size) {
-    Paint paint = Paint()
+    Paint paint2 = Paint()
       ..color = Colors.blue
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.fill;
-    canvas.drawRect(Offset(-80, -24) & const Size(160, 48), paint);
-  }
 
-  //빈자리
-  void _noperson(Canvas canvas, Size size) {
-    final icon = Icons.chair_outlined;
-    TextPainter textPainter = TextPainter(textDirection: TextDirection.rtl);
-    textPainter.text = TextSpan(
-        text: String.fromCharCode(icon.codePoint),
-        style: TextStyle(
-            fontSize: 46.0,
-            fontFamily: icon.fontFamily,
-            color: Colors.grey[600]));
-    textPainter.layout();
-    textPainter.paint(canvas, Offset(-23, -23));
-  }
-
-  //마스크낀사람
-  void _person_mask(Canvas canvas, Size size) {
-    final icon = CustomIcons.mask2;
-    TextPainter textPainter = TextPainter(textDirection: TextDirection.rtl);
-    textPainter.text = TextSpan(
-        text: String.fromCharCode(icon.codePoint),
-        style: TextStyle(
-            fontSize: 48.0, fontFamily: icon.fontFamily, color: Colors.green));
-    textPainter.layout();
-    textPainter.paint(canvas, Offset(-24, -24));
-  }
-
-  //마스크안낀사람
-  void _person_nomask(Canvas canvas, Size size) {
-    final icon = CustomIcons.mask2_2;
-    TextPainter textPainter = TextPainter(textDirection: TextDirection.rtl);
-    textPainter.text = TextSpan(
-        text: String.fromCharCode(icon.codePoint),
-        style: TextStyle(
-            fontSize: 48.0, fontFamily: icon.fontFamily, color: Colors.red));
-    textPainter.layout();
-    textPainter.paint(canvas, Offset(-24, -24));
-  }
-
-  // 에러인 사람
-  void _person_error(Canvas canvas, Size size) {
-    final icon = CustomIcons.error2_1;
-    TextPainter textPainter = TextPainter(textDirection: TextDirection.rtl);
-    textPainter.text = TextSpan(
-        text: String.fromCharCode(icon.codePoint),
-        style: TextStyle(
-            fontSize: 44.0, fontFamily: icon.fontFamily, color: Colors.yellow));
-    textPainter.layout();
-    textPainter.paint(canvas, Offset(-22, -22));
-  }
-
-  //table별 사람들 그리기
-  //table1의 사람들
-  void table1_person(Canvas canvas, Size size) {
-    //p1, table1, up
-    if (target == "p1" &&
-        yolo_result?["table1"]["chair"].keys.elementAt(0) == "up") {
-      //사람 없음
-      if (yolo_result?["table1"]["chair"]["up"] == 0) {
-        _noperson(canvas, size);
-      } //마스크 쓴 사람
-      else if (yolo_result?["table1"]["chair"]["up"] == 1) {
-        _person_mask(canvas, size);
-      } //마스크 안쓴사람
-      else if (yolo_result?["table1"]["chair"]["up"] == 2) {
-        _person_nomask(canvas, size);
-      } //에러인 사람
-      else {
-        _person_error(canvas, size);
-      }
-    }  //p2, table, down
-    else if (target == "p2" &&
-        yolo_result?["table1"]["chair"].keys.elementAt(1) == "down") {
-      if (yolo_result?["table1"]["chair"]["down"] == 0) {
-        _noperson(canvas, size);
-      } else if (yolo_result?["table1"]["chair"]["down"] == 1) {
-        _person_mask(canvas, size);
-      } else if (yolo_result?["table1"]["chair"]["down"] == 2) {
-        _person_nomask(canvas, size);
-      } else {
-        _person_error(canvas, size);
-      }
-    }
-  }
-
-  //table2의 사람들
-  void table2_person(Canvas canvas, Size size) {
-    //p3, table2, up
-    if (target == "p3" &&
-        yolo_result?["table2"]["chair"].keys.elementAt(0) == "up") {
-      if (yolo_result?["table2"]["chair"]["up"] == 0) {
-        _noperson(canvas, size);
-      } else if (yolo_result?["table2"]["chair"]["up"] == 1) {
-        _person_mask(canvas, size);
-      } else if (yolo_result?["table2"]["chair"]["up"] == 2) {
-        _person_nomask(canvas, size);
-      } else {
-        _person_error(canvas, size);
-      }
-    } //p4, table2, down
-    else if (target == "p4" &&
-        yolo_result?["table2"]["chair"].keys.elementAt(1) == "down") {
-      if (yolo_result?["table2"]["chair"]["down"] == 0) {
-        _noperson(canvas, size);
-      } else if (yolo_result?["table2"]["chair"]["down"] == 1) {
-        _person_mask(canvas, size);
-      } else if (yolo_result?["table2"]["chair"]["down"] == 2) {
-        _person_nomask(canvas, size);
-      } else {
-        _person_error(canvas, size);
-      }
-    }
-  }
-
-  //table3의 사람들
-  void table3_person(Canvas canvas, Size size) {
-    //p5, table3, up
-    if (target == "p5" &&
-        yolo_result?["table3"]["chair"].keys.elementAt(0) == "up") {
-      if (yolo_result?["table3"]["chair"]["up"] == 0) {
-        _noperson(canvas, size);
-      } else if (yolo_result?["table3"]["chair"]["up"] == 1) {
-        _person_mask(canvas, size);
-      } else if (yolo_result?["table3"]["chair"]["up"] == 2) {
-        _person_nomask(canvas, size);
-      } else {
-        _person_error(canvas, size);
-      }
-    } //p6, table3, down
-    else if (target == "p6" &&
-        yolo_result?["table3"]["chair"].keys.elementAt(1) == "down") {
-      if (yolo_result?["table3"]["chair"]["down"] == 0) {
-        _noperson(canvas, size);
-      } else if (yolo_result?["table3"]["chair"]["down"] == 1) {
-        _person_mask(canvas, size);
-      } else if (yolo_result?["table3"]["chair"]["down"] == 2) {
-        _person_nomask(canvas, size);
-      } else {
-        _person_error(canvas, size);
-      }
-    }
-  }
-
-  //테이블과 사람을 확인하여 빈자리 유무 확인
-  //table1 그리기
-  void table1(Canvas canvas, Size size) {
-    if (target == 't1'){
-      //0이면 빈자리
-      if ((yolo_result?["table1"]['object']['notebook'] == 0) &&
-          (yolo_result?["table1"]['object']['book'] == 0) &&
-          (yolo_result?["table1"]['object']['bag'] == 0) &&
-          (yolo_result?["table1"]['object']['cup'] == 0) &&
-          (yolo_result?["table1"]['chair']['up'] == 0) &&
-          (yolo_result?["table1"]['chair']['down'] == 0)) {
-        _emptytable(canvas, size);
-      }
-      //0이 아니면 자리있음
-      else {
-        _table(canvas, size);
-      }
-    }
-  }
-
-  //table2 그리기
-  void table2(Canvas canvas, Size size) {
-    if (target == 't2'){
-      if ((yolo_result?["table2"]['object']['notebook'] == 0) &&
-          (yolo_result?["table2"]['object']['book'] == 0) &&
-          (yolo_result?["table2"]['object']['bag'] == 0) &&
-          (yolo_result?["table2"]['object']['cup'] == 0) &&
-          (yolo_result?["table2"]['chair']['up'] == 0) &&
-          (yolo_result?["table2"]['chair']['down'] == 0)) {
-        _emptytable(canvas, size);
-      } else {
-        _table(canvas, size);
-      }
-    }
-  }
-
-  //table3 그리기
-  void table3(Canvas canvas, Size size) {
-    if (target == 't3'){
-      if ((yolo_result?["table3"]['object']['notebook'] == 0) &&
-          (yolo_result?["table3"]['object']['book'] == 0) &&
-          (yolo_result?["table3"]['object']['bag'] == 0) &&
-          (yolo_result?["table3"]['object']['cup'] == 0) &&
-          (yolo_result?["table3"]['chair']['up'] == 0) &&
-          (yolo_result?["table3"]['chair']['down'] == 0)) {
-        _emptytable(canvas, size);
-      } else {
-        _table(canvas, size);
-      }
+    //빈자리
+    if (tableResult == "no") {
+      canvas.drawRect(Offset(-80, -24) & const Size(160, 48), paint1);
+    } //자리있음
+    else if (tableResult == "yes") {
+      canvas.drawRect(Offset(-80, -24) & const Size(160, 48), paint2);
     }
   }
 
   //그림 그리기 시작
   @override
   void paint(Canvas canvas, Size size) {
-    for (int i = 0; i < 3; i++) {
-      //table1일경우
-      if (yolo_result?.keys.elementAt(i) == "table1") {
-        //table1의 person
-        table1_person(canvas, size);
-        //table1
-        table1(canvas, size);
-      } //table2일경우
-      else if (yolo_result?.keys.elementAt(i) == "table2") {
-        //table2의 person
-        table2_person(canvas, size);
-        //table2
-        table2(canvas, size);
-      } //table3일경우
-      else {
-        //table3의 person
-        table3_person(canvas, size);
-        //table3
-        table3(canvas, size);
-      }
+    //객체 생성
+    var person = draw_person(target: target, yolo_result: yolo_result);
+    var table = draw_table(target: target, yolo_result: yolo_result);
+
+    //person, table 상태 판단
+    String personResult = person.check_person();
+    String tableResult = table.check_table();
+
+    //person 그리기
+    if (target[0] == 'p') {
+      personPainter(canvas, size, personResult);
+    } // table 그리기
+    else {
+      tablePainter(canvas, size, tableResult);
     }
   }
 
@@ -261,17 +122,17 @@ class myPainter extends CustomPainter {
   }
 }
 
-
 class _EmptyCheckState extends State<EmptyCheck> {
   WebSocketChannel? channel;
 
   //웹소켓 연결
-  websocket_connect(){
-    channel = WebSocketChannel.connect(Uri.parse('ws://35.77.144.191/ws/detectData'));
+  websocket_connect() {
+    channel =
+        WebSocketChannel.connect(Uri.parse('ws://35.77.144.191/ws/detectData'));
   }
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     websocket_connect();
   }
@@ -308,9 +169,8 @@ class _EmptyCheckState extends State<EmptyCheck> {
                   ),
                 ),
               ),
-              // Visibility(child: Text(yolo_result.toString()),visible: true),
+              //웹소켓에서 값 받아서 보여주는 부분
               StreamBuilder(
-                // initialData: yolo_result_initial,
                 stream: channel?.stream,
                 builder: (context, snapshot) {
                   //null 신호 일 때
@@ -318,8 +178,7 @@ class _EmptyCheckState extends State<EmptyCheck> {
                     return Center(child: CircularProgressIndicator());
                   } //값이 들어왔을 때
                   else {
-                    //json -> string,dynamic
-                    yolo_result = jsonDecode('${snapshot.data}');
+                    yolo_result = jsonDecode('${snapshot.data}'); //들어온 값 json -> string,dynamic
                     return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 24.0),
                         child: SafeArea(
@@ -336,7 +195,6 @@ class _EmptyCheckState extends State<EmptyCheck> {
                                       height: 45,
                                     ),
                                     Container(
-                                      // alignment: Alignment.center,
                                       child: CustomPaint(
                                         painter: myPainter("p1"),
                                       ),
@@ -345,7 +203,6 @@ class _EmptyCheckState extends State<EmptyCheck> {
                                       height: 50,
                                     ),
                                     Container(
-                                      // alignment: Alignment.center,
                                       child: CustomPaint(
                                         painter: myPainter("t1"),
                                       ),
@@ -354,7 +211,6 @@ class _EmptyCheckState extends State<EmptyCheck> {
                                       height: 50,
                                     ),
                                     Container(
-                                      // alignment: Alignment.center,
                                       child: CustomPaint(
                                         painter: myPainter("p2"),
                                       ),
@@ -363,7 +219,6 @@ class _EmptyCheckState extends State<EmptyCheck> {
                                       height: 80,
                                     ),
                                     Container(
-                                      // alignment: Alignment.center,
                                       child: CustomPaint(
                                         painter: myPainter("p3"),
                                       ),
@@ -372,7 +227,6 @@ class _EmptyCheckState extends State<EmptyCheck> {
                                       height: 50,
                                     ),
                                     Container(
-                                      // alignment: Alignment.center,
                                       child: CustomPaint(
                                         painter: myPainter("t2"),
                                       ),
@@ -381,7 +235,6 @@ class _EmptyCheckState extends State<EmptyCheck> {
                                       height: 50,
                                     ),
                                     Container(
-                                      // alignment: Alignment.center,
                                       child: CustomPaint(
                                         painter: myPainter("p4"),
                                       ),
@@ -390,7 +243,6 @@ class _EmptyCheckState extends State<EmptyCheck> {
                                       height: 80,
                                     ),
                                     Container(
-                                      // alignment: Alignment.center,
                                       child: CustomPaint(
                                         painter: myPainter("p5"),
                                       ),
@@ -399,7 +251,6 @@ class _EmptyCheckState extends State<EmptyCheck> {
                                       height: 50,
                                     ),
                                     Container(
-                                      // alignment: Alignment.center,
                                       child: CustomPaint(
                                         painter: myPainter("t3"),
                                       ),
@@ -408,7 +259,6 @@ class _EmptyCheckState extends State<EmptyCheck> {
                                       height: 50,
                                     ),
                                     Container(
-                                      // alignment: Alignment.center,
                                       child: CustomPaint(
                                         painter: myPainter("p6"),
                                       ),
@@ -419,7 +269,7 @@ class _EmptyCheckState extends State<EmptyCheck> {
                                   ])),
                         ));
                   }
-                  },
+                },
               ),
             ],
           ),

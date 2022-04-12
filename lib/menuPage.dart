@@ -1,8 +1,10 @@
 // ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sm7/enterance/live_camera.dart';
+import 'package:sm7/entrance/cameraMain.dart';
 import 'package:sm7/inside/emptyCheck.dart';
+import 'inside/emptyCheck.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({Key? key}) : super(key: key);
@@ -58,10 +60,11 @@ class _MenuPageState extends State<MenuPage> {
                           minimumSize: Size(250, 80),
                           elevation: 0.0),
                       onPressed: () {
+                        //출입 마스크 확인 페이지로 전환
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => LiveFeed()));
+                                builder: (context) => CameraMain()));
                       },
                     ),
                     SizedBox(height: 75.0),
@@ -74,6 +77,7 @@ class _MenuPageState extends State<MenuPage> {
                           minimumSize: Size(250, 80),
                           elevation: 0.0),
                       onPressed: () {
+                        //좌석 & 마스크 확인 페이지로 전환
                         Navigator.push(
                             context,
                             MaterialPageRoute(

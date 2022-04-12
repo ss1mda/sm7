@@ -20,34 +20,28 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _password = TextEditingController();
 
   Future<void> loginUser() async {
+    if (_email.text.isNotEmpty && _password.text.isNotEmpty) {
+      final body =
+          jsonEncode({'email': _email.text, 'password': _password.text});
+      final response =
+      //웹서버 연결, email 및 password도 전송
+          await http.post(Uri.parse("http://35.77.144.191/login"), body: body);
+      //연결 성공
+      if (response.statusCode == 200) {
         Navigator.push(
           //다음페이지(메뉴패이지)로 전환
             context, MaterialPageRoute(builder: (context) => MenuPage()));
+      } //정보가 다름
+      else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("로그인 정보가 일치하지 않습니다")));
+      }
+    } //입력칸에 값이 없을 때
+    else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("빈칸을 채워 주세요")));
+    }
   }
-
-  // Future<void> loginUser() async {
-  //   if (_email.text.isNotEmpty && _password.text.isNotEmpty) {
-  //     final body =
-  //         jsonEncode({'email': _email.text, 'password': _password.text});
-  //     final response =
-  //     //웹서버 연결, email 및 password도 전송
-  //         await http.post(Uri.parse("http://35.77.144.191/login"), body: body);
-  //     //연결 성공
-  //     if (response.statusCode == 200) {
-  //       Navigator.push(
-  //         //다음페이지(메뉴패이지)로 전환
-  //           context, MaterialPageRoute(builder: (context) => MenuPage()));
-  //     } //정보가 다름
-  //     else {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //           const SnackBar(content: Text("로그인 정보가 일치하지 않습니다")));
-  //     }
-  //   } //입력칸에 값이 없을 때
-  //   else {
-  //     ScaffoldMessenger.of(context)
-  //         .showSnackBar(SnackBar(content: Text("빈칸을 채워 주세요")));
-  //   }
-  // }
 
   //이메일 입력칸
   Widget _buildEmailTF() {
@@ -125,49 +119,6 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  //비밀번호 찾기_기능없음
-  Widget _buildForgotPasswordBtn() {
-    return Container(
-      alignment: Alignment.centerRight,
-      child: TextButton(
-        onPressed: () => print('Forgot Password Button Pressed'),
-        style: TextButton.styleFrom(padding: EdgeInsets.only(right: 0.0)),
-        child: Text(
-          'Forgot Password?',
-          style: kLabelStyle,
-        ),
-      ),
-    );
-  }
-
-  //아이디 패스워드 기억_기능없음
-  Widget _buildRememberMeCheckbox() {
-    return Container(
-      height: 20.0,
-      child: Row(
-        children: <Widget>[
-          Theme(
-            data: ThemeData(unselectedWidgetColor: Colors.white),
-            child: Checkbox(
-              value: _rememberMe,
-              checkColor: Colors.green,
-              activeColor: Colors.white,
-              onChanged: (value) {
-                setState(() {
-                  final _rememberMe = value;
-                });
-              },
-            ),
-          ),
-          Text(
-            'Remember me',
-            style: kLabelStyle,
-          ),
-        ],
-      ),
-    );
-  }
-
   //로그인 버튼
   Widget _buildLoginBtn() {
     return Container(
@@ -199,65 +150,6 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
-
-  // Widget _buildSignInWithText() {
-  //   return Column(
-  //     children: <Widget>[
-  //       Text(
-  //         '- OR -',
-  //         style: TextStyle(
-  //           color: Colors.white,
-  //           fontWeight: FontWeight.w400,
-  //         ),
-  //       ),
-  //       SizedBox(height: 20.0),
-  //       Text(
-  //         'Sign in with',
-  //         style: kLabelStyle,
-  //       ),
-  //     ],
-  //   );
-  // }
-
-  // Widget _buildSocialBtn(Function onTap, AssetImage logo) {
-  //   return GestureDetector(
-  //     onTap: onTap(),
-  //     child: Container(
-  //       height: 60.0,
-  //       width: 60.0,
-  //       decoration: BoxDecoration(
-  //         shape: BoxShape.circle,
-  //         color: Colors.white,
-  //         boxShadow: [
-  //           BoxShadow(
-  //             color: Colors.black26,
-  //             offset: Offset(0, 2),
-  //             blurRadius: 6.0,
-  //           ),
-  //         ],
-  //         image: DecorationImage(
-  //           image: logo,
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  // Widget _buildSocialBtnRow() {
-  //   return Padding(
-  //     padding: EdgeInsets.symmetric(vertical: 30.0),
-  //     child: Row(
-  //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-  //       children: <Widget>[
-  //         _buildSocialBtn(
-  //           () => print('Login with Kakao'),
-  //           const AssetImage("assets/kakaoLogo.jpg"),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   //회원가입
   Widget _buildSignupBtn() {
@@ -345,10 +237,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       //패스워드
                       _buildPasswordTF(),
-                      //패스워드 찾기
-                      _buildForgotPasswordBtn(),
-                      //아이디, 비밀번호 저장
-                      _buildRememberMeCheckbox(),
                       //로그인 버튼
                       _buildLoginBtn(),
                       //회원가입 버튼
