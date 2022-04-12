@@ -8,8 +8,7 @@ typedef void Callback(List<dynamic> list, int h, int w);
 class CameraFeed extends StatefulWidget {
   final List<CameraDescription> cameras;
   final Callback setRecognitions;
-  // The cameraFeed Class takes the cameras list and the setRecognitions
-  // function as argument
+
   CameraFeed(this.cameras, this.setRecognitions);
 
   @override
@@ -24,12 +23,12 @@ class _CameraFeedState extends State<CameraFeed> {
   void initState(){
     super.initState();
     print(widget.cameras);
-    //카메라 가져오기
+    //카메라 유뮤 판단
     if (widget.cameras == null || widget.cameras.length < 1) {
       print('No Cameras Found.');
     } else {
       controller = new CameraController(
-        widget.cameras[1], //0,1
+        widget.cameras[0], //0,1
         ResolutionPreset.high, //해상도
         imageFormatGroup: ImageFormatGroup.yuv420,
       );

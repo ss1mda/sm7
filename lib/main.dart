@@ -1,8 +1,5 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:sm7/login&signup/loginPage.dart';
-
-// List<CameraDescription>? cameras;
 
 void main() async {
   runApp(const MaterialApp(home: MyApp()));

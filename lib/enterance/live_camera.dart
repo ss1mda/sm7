@@ -28,6 +28,7 @@ class _LiveFeedState extends State<LiveFeed> {
   //카메라셋업
   _setupCameras() async{
     try {
+      //사용가능한 카메로 목록을 저장
       cameras = await availableCameras();
     }on CameraException catch (_){
       print("no camera");
@@ -57,9 +58,11 @@ class _LiveFeedState extends State<LiveFeed> {
   @override
   Widget build(BuildContext context) {
     Size screen = MediaQuery.of(context).size;
+    //카메라 없는 상태
     if (cameras == null) {
       return Center(child: CircularProgressIndicator());
-    } else {
+    } //카메라가 있는 상태
+    else {
       return Scaffold(
         appBar: AppBar(
           title: Text("출입 마스크 확인", style: TextStyle(fontSize: 20.0)),

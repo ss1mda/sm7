@@ -19,30 +19,37 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
 
-  // Future<void> loginUser() async {
-  //   Navigator.push(
-  //       context, MaterialPageRoute(builder: (context) => MenuPage()));
-  // }
-
   Future<void> loginUser() async {
-    if (_email.text.isNotEmpty && _password.text.isNotEmpty) {
-      final body =
-          jsonEncode({'email': _email.text, 'password': _password.text});
-      final response =
-          await http.post(Uri.parse("http://35.77.144.191:8001/login"), body: body);
-      if (response.statusCode == 200) {
         Navigator.push(
+          //다음페이지(메뉴패이지)로 전환
             context, MaterialPageRoute(builder: (context) => MenuPage()));
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Invaild Credentials.")));
-      }
-    } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Black Field Not Allowed")));
-    }
   }
 
+  // Future<void> loginUser() async {
+  //   if (_email.text.isNotEmpty && _password.text.isNotEmpty) {
+  //     final body =
+  //         jsonEncode({'email': _email.text, 'password': _password.text});
+  //     final response =
+  //     //웹서버 연결, email 및 password도 전송
+  //         await http.post(Uri.parse("http://35.77.144.191/login"), body: body);
+  //     //연결 성공
+  //     if (response.statusCode == 200) {
+  //       Navigator.push(
+  //         //다음페이지(메뉴패이지)로 전환
+  //           context, MaterialPageRoute(builder: (context) => MenuPage()));
+  //     } //정보가 다름
+  //     else {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //           const SnackBar(content: Text("로그인 정보가 일치하지 않습니다")));
+  //     }
+  //   } //입력칸에 값이 없을 때
+  //   else {
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(SnackBar(content: Text("빈칸을 채워 주세요")));
+  //   }
+  // }
+
+  //이메일 입력칸
   Widget _buildEmailTF() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,6 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
           decoration: kBoxDecorationStyle,
           height: 60.0,
           child: TextFormField(
+            //작성한 내용 _email에 저장됨
             controller: _email,
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(
@@ -79,6 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  //패스워드 입력칸
   Widget _buildPasswordTF() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,6 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
           decoration: kBoxDecorationStyle,
           height: 60.0,
           child: TextFormField(
+            //작성한 내용 _password 저장됨
             controller: _password,
             obscureText: true,
             style: TextStyle(
@@ -115,6 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  //비밀번호 찾기_기능없음
   Widget _buildForgotPasswordBtn() {
     return Container(
       alignment: Alignment.centerRight,
@@ -129,6 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  //아이디 패스워드 기억_기능없음
   Widget _buildRememberMeCheckbox() {
     return Container(
       height: 20.0,
@@ -156,6 +168,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  //로그인 버튼
   Widget _buildLoginBtn() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25.0),
@@ -169,9 +182,8 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           primary: Colors.white,
         ),
+        //웹서버 연결, 로그인 요청
         onPressed: () {
-          print(_email.text);
-          print(_password.text);
           loginUser();
         },
         child: Text(
@@ -188,64 +200,66 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildSignInWithText() {
-    return Column(
-      children: <Widget>[
-        Text(
-          '- OR -',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-        SizedBox(height: 20.0),
-        Text(
-          'Sign in with',
-          style: kLabelStyle,
-        ),
-      ],
-    );
-  }
 
-  Widget _buildSocialBtn(Function onTap, AssetImage logo) {
-    return GestureDetector(
-      onTap: onTap(),
-      child: Container(
-        height: 60.0,
-        width: 60.0,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black26,
-              offset: Offset(0, 2),
-              blurRadius: 6.0,
-            ),
-          ],
-          image: DecorationImage(
-            image: logo,
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _buildSignInWithText() {
+  //   return Column(
+  //     children: <Widget>[
+  //       Text(
+  //         '- OR -',
+  //         style: TextStyle(
+  //           color: Colors.white,
+  //           fontWeight: FontWeight.w400,
+  //         ),
+  //       ),
+  //       SizedBox(height: 20.0),
+  //       Text(
+  //         'Sign in with',
+  //         style: kLabelStyle,
+  //       ),
+  //     ],
+  //   );
+  // }
 
-  Widget _buildSocialBtnRow() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 30.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          _buildSocialBtn(
-            () => print('Login with Kakao'),
-            const AssetImage("assets/kakaoLogo.jpg"),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _buildSocialBtn(Function onTap, AssetImage logo) {
+  //   return GestureDetector(
+  //     onTap: onTap(),
+  //     child: Container(
+  //       height: 60.0,
+  //       width: 60.0,
+  //       decoration: BoxDecoration(
+  //         shape: BoxShape.circle,
+  //         color: Colors.white,
+  //         boxShadow: [
+  //           BoxShadow(
+  //             color: Colors.black26,
+  //             offset: Offset(0, 2),
+  //             blurRadius: 6.0,
+  //           ),
+  //         ],
+  //         image: DecorationImage(
+  //           image: logo,
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
+  // Widget _buildSocialBtnRow() {
+  //   return Padding(
+  //     padding: EdgeInsets.symmetric(vertical: 30.0),
+  //     child: Row(
+  //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+  //       children: <Widget>[
+  //         _buildSocialBtn(
+  //           () => print('Login with Kakao'),
+  //           const AssetImage("assets/kakaoLogo.jpg"),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
+  //회원가입
   Widget _buildSignupBtn() {
     return GestureDetector(
       onTap: () {
@@ -315,7 +329,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                        'Sign In',
+                        'LOGIN',
                         style: TextStyle(
                           color: Colors.white,
                           fontFamily: 'OpenSans',
@@ -324,16 +338,20 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       SizedBox(height: 30.0),
+                      //이메일
                       _buildEmailTF(),
                       SizedBox(
                         height: 30.0,
                       ),
+                      //패스워드
                       _buildPasswordTF(),
+                      //패스워드 찾기
                       _buildForgotPasswordBtn(),
+                      //아이디, 비밀번호 저장
                       _buildRememberMeCheckbox(),
+                      //로그인 버튼
                       _buildLoginBtn(),
-                      _buildSignInWithText(),
-                      _buildSocialBtnRow(),
+                      //회원가입 버튼
                       _buildSignupBtn(),
                     ],
                   ),

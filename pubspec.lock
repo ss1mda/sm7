@@ -64,7 +64,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.15.0"
-<<<<<<< HEAD
   cross_file:
     dependency: transitive
     description:
@@ -72,8 +71,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.2"
-=======
->>>>>>> origin/LHH
   crypto:
     dependency: transitive
     description:

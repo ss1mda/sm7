@@ -9,7 +9,6 @@ import 'package:sm7/login&signup/model/userModel.dart';
 import 'package:sm7/login&signup/loginPage.dart';
 import 'package:http/http.dart' as http;
 
-import '../main.dart';
 
 class CreateAccount extends StatefulWidget {
    const CreateAccount({Key? key}) : super(key: key);
@@ -19,7 +18,7 @@ class CreateAccount extends StatefulWidget {
 
 Future<UserModel> createAccount(
     String name, String email, String password) async {
-  String url = "http://35.77.144.191:8001/accounts";
+  String url = "http://35.77.144.191/accounts";
 
   final response = await http.post(Uri.parse(url),
       body: jsonEncode(<String, String>{
@@ -27,17 +26,16 @@ Future<UserModel> createAccount(
         "email": email,
         "password": password
       }));
-  final data = response.body;
-  print(data);
+  //웹서버 연결 성공
   if (response.statusCode == 201) {
     final String responseString = response.body;
-
     return userModelFromJson(responseString);
   } else {
     throw Exception("Failed");
   }
 }
 
+//회원가입 완료 다이얼로그 띄우기
 class CustomDialog extends StatelessWidget {
   final String title, description, buttonText;
   final Image image;
@@ -134,6 +132,7 @@ class _CreateAccountState extends State<CreateAccount> {
   String email = '';
   String password = '';
 
+  //매장명
   Widget _buildBranchNameTF() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,7 +147,9 @@ class _CreateAccountState extends State<CreateAccount> {
           decoration: kBoxDecorationStyle,
           height: 60.0,
           child: TextFormField(
+            //입력값 _name에 저장
             controller: _name,
+            //입력 하지 않았을때 등록 버튼 누르면 나오는 메세지
             validator: (val) {
               if (val == null || val.isEmpty) {
                 return 'Enter Branch Name';
@@ -167,6 +168,7 @@ class _CreateAccountState extends State<CreateAccount> {
                 Icons.coffee,
                 color: Colors.white,
               ),
+              //입력 전 기본 값
               hintText: 'Enter your Branch Name',
               hintStyle: kHintTextStyle,
             ),
@@ -176,6 +178,7 @@ class _CreateAccountState extends State<CreateAccount> {
     );
   }
 
+  //이메일
   Widget _buildEmailTF() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -190,8 +193,10 @@ class _CreateAccountState extends State<CreateAccount> {
           decoration: kBoxDecorationStyle,
           height: 60.0,
           child: TextFormField(
+            //입력값 _email에 저장
             controller: _email,
             keyboardType: TextInputType.emailAddress,
+            //입력 하지 않았을때 등록 버튼 누르면 나오는 메세지
             validator: (val) {
               if (val == null || val.isEmpty) {
                 return 'Enter Email';
@@ -209,6 +214,7 @@ class _CreateAccountState extends State<CreateAccount> {
                 Icons.email,
                 color: Colors.white,
               ),
+             //입력 전 기본 값
               hintText: 'Enter your Email',
               hintStyle: kHintTextStyle,
             ),
@@ -218,6 +224,7 @@ class _CreateAccountState extends State<CreateAccount> {
     );
   }
 
+  //패스워드
   Widget _buildPasswordTF() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -232,7 +239,9 @@ class _CreateAccountState extends State<CreateAccount> {
           decoration: kBoxDecorationStyle,
           height: 60.0,
           child: TextFormField(
+            //입력값 _password에 저장
             controller: _password,
+            //입력 하지 않았을때 등록 버튼 누르면 나오는 메세지
             validator: (val) {
               if (val == null || val.isEmpty) {
                 return 'Enter Password';
@@ -251,6 +260,7 @@ class _CreateAccountState extends State<CreateAccount> {
                 Icons.lock,
                 color: Colors.white,
               ),
+              //입력 전 기본 값
               hintText: 'Enter your Password',
               hintStyle: kHintTextStyle,
             ),
@@ -260,6 +270,7 @@ class _CreateAccountState extends State<CreateAccount> {
     );
   }
 
+  //등록버튼
   Widget _buildRegisterBtn() {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 25.0),
@@ -279,12 +290,14 @@ class _CreateAccountState extends State<CreateAccount> {
             final String email = _email.text;
             final String password = _password.text;
 
+            //json = json
             final UserModel user = await createAccount(name, email, password);
 
             setState(() {
               final _user = user;
             });
 
+            //회원가입 완료 다이얼로그 띄우기
             showDialog(
                 context: context,
                 builder: (_) => CustomDialog(
@@ -309,9 +322,11 @@ class _CreateAccountState extends State<CreateAccount> {
     );
   }
 
+  //로그인로 전환되는 버튼
   Widget _buildSigninBtn() {
     return GestureDetector(
       onTap: () {
+        //전 페이지로
         Navigator.pop(context);
       },
       child: RichText(
@@ -388,19 +403,24 @@ class _CreateAccountState extends State<CreateAccount> {
                           ),
                         ),
                         const SizedBox(height: 30.0),
+                        //매장명
                         _buildBranchNameTF(),
                         const SizedBox(
                           height: 30.0,
                         ),
+                        //이메일
                         _buildEmailTF(),
                         const SizedBox(
                           height: 30.0,
                         ),
+                        //패스워드
                         _buildPasswordTF(),
                         const SizedBox(
                           height: 30.0,
                         ),
+                        //등록 버튼
                         _buildRegisterBtn(),
+                        //로그인 버튼
                         _buildSigninBtn(),
                       ],
                     ),

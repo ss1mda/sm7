@@ -3,48 +3,18 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sm7/inside/custom_icons.dart';
-import 'package:web_socket_channel/io.dart';
+import 'package:sm7/custom_icons.dart';
+import 'package:sm7/menuPage.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-class EmptyCheck_first extends StatelessWidget {
-  const EmptyCheck_first({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-        home: EmptyCheck(
-          //웹 소켓 채널 연결
-            channel: IOWebSocketChannel.connect(
-                "ws://35.77.144.191/ws/detectData")));
-  }
-}
-
 class EmptyCheck extends StatefulWidget {
-  final WebSocketChannel? channel;
-  EmptyCheck({
-    Key? key,
-    this.channel,
-  }) : super(key: key);
+  const EmptyCheck({Key? key}) : super(key: key);
   @override
   _EmptyCheckState createState() => _EmptyCheckState();
 }
 
 //초기값
 Map<String, dynamic>? yolo_result;
-  // // 테이블 / 0빈자리, 1마스크한사람, 2마스크안한사람 /  3error 노트북 갯수, 책 갯수, 가방 갯수, 컵 갯수
-  // 'table1': {
-  //   'chair': {'up': 0, 'down': 0},
-  //   'object': {"notebook": 0, "book": 0, "bag": 0, "cup": 0}
-  // },
-  // 'table2': {
-  //   'chair': {'up': 0, 'down': 0},
-  //   'object': {"notebook": 0, "book": 0, "bag": 0, "cup": 0}
-  // },
-  // 'table3': {
-  //   'chair': {'up': 0, 'down': 0},
-  //   'object': {"notebook": 0, "book": 0, "bag": 0, "cup": 0}
-  // }
 
 class myPainter extends CustomPainter {
   String target;
@@ -104,25 +74,40 @@ class myPainter extends CustomPainter {
     textPainter.paint(canvas, Offset(-24, -24));
   }
 
+  // 에러인 사람
+  void _person_error(Canvas canvas, Size size) {
+    final icon = CustomIcons.error2_1;
+    TextPainter textPainter = TextPainter(textDirection: TextDirection.rtl);
+    textPainter.text = TextSpan(
+        text: String.fromCharCode(icon.codePoint),
+        style: TextStyle(
+            fontSize: 44.0, fontFamily: icon.fontFamily, color: Colors.yellow));
+    textPainter.layout();
+    textPainter.paint(canvas, Offset(-22, -22));
+  }
+
   //table별 사람들 그리기
   //table1의 사람들
   void table1_person(Canvas canvas, Size size) {
-    //p2, table1
+    //p1, table1, up
     if (target == "p1" &&
         yolo_result?["table1"]["chair"].keys.elementAt(0) == "up") {
-      //p1, table1, up
+      //사람 없음
       if (yolo_result?["table1"]["chair"]["up"] == 0) {
         _noperson(canvas, size);
-      } else if (yolo_result?["table1"]["chair"]["up"] == 1) {
+      } //마스크 쓴 사람
+      else if (yolo_result?["table1"]["chair"]["up"] == 1) {
         _person_mask(canvas, size);
-      } else if (yolo_result?["table1"]["chair"]["up"] == 2) {
+      } //마스크 안쓴사람
+      else if (yolo_result?["table1"]["chair"]["up"] == 2) {
         _person_nomask(canvas, size);
-      } else {
-        _person_nomask(canvas, size);
+      } //에러인 사람
+      else {
+        _person_error(canvas, size);
       }
-    } else if (target == "p2" &&
+    }  //p2, table, down
+    else if (target == "p2" &&
         yolo_result?["table1"]["chair"].keys.elementAt(1) == "down") {
-      //p2, table, down
       if (yolo_result?["table1"]["chair"]["down"] == 0) {
         _noperson(canvas, size);
       } else if (yolo_result?["table1"]["chair"]["down"] == 1) {
@@ -130,13 +115,14 @@ class myPainter extends CustomPainter {
       } else if (yolo_result?["table1"]["chair"]["down"] == 2) {
         _person_nomask(canvas, size);
       } else {
-        _person_nomask(canvas, size);
+        _person_error(canvas, size);
       }
     }
   }
 
   //table2의 사람들
   void table2_person(Canvas canvas, Size size) {
+    //p3, table2, up
     if (target == "p3" &&
         yolo_result?["table2"]["chair"].keys.elementAt(0) == "up") {
       if (yolo_result?["table2"]["chair"]["up"] == 0) {
@@ -146,9 +132,10 @@ class myPainter extends CustomPainter {
       } else if (yolo_result?["table2"]["chair"]["up"] == 2) {
         _person_nomask(canvas, size);
       } else {
-        _person_nomask(canvas, size);
+        _person_error(canvas, size);
       }
-    } else if (target == "p4" &&
+    } //p4, table2, down
+    else if (target == "p4" &&
         yolo_result?["table2"]["chair"].keys.elementAt(1) == "down") {
       if (yolo_result?["table2"]["chair"]["down"] == 0) {
         _noperson(canvas, size);
@@ -157,13 +144,14 @@ class myPainter extends CustomPainter {
       } else if (yolo_result?["table2"]["chair"]["down"] == 2) {
         _person_nomask(canvas, size);
       } else {
-        _person_nomask(canvas, size);
+        _person_error(canvas, size);
       }
     }
   }
 
   //table3의 사람들
   void table3_person(Canvas canvas, Size size) {
+    //p5, table3, up
     if (target == "p5" &&
         yolo_result?["table3"]["chair"].keys.elementAt(0) == "up") {
       if (yolo_result?["table3"]["chair"]["up"] == 0) {
@@ -173,9 +161,10 @@ class myPainter extends CustomPainter {
       } else if (yolo_result?["table3"]["chair"]["up"] == 2) {
         _person_nomask(canvas, size);
       } else {
-        _person_nomask(canvas, size);
+        _person_error(canvas, size);
       }
-    } else if (target == "p6" &&
+    } //p6, table3, down
+    else if (target == "p6" &&
         yolo_result?["table3"]["chair"].keys.elementAt(1) == "down") {
       if (yolo_result?["table3"]["chair"]["down"] == 0) {
         _noperson(canvas, size);
@@ -184,16 +173,16 @@ class myPainter extends CustomPainter {
       } else if (yolo_result?["table3"]["chair"]["down"] == 2) {
         _person_nomask(canvas, size);
       } else {
-        _person_nomask(canvas, size);
+        _person_error(canvas, size);
       }
     }
   }
 
-  // 테이블과 사람을 확인하여 빈자리 유무 확인
+  //테이블과 사람을 확인하여 빈자리 유무 확인
   //table1 그리기
   void table1(Canvas canvas, Size size) {
-    if (target == 't1' &&
-        yolo_result?["table1"].keys.elementAt(1) == "object") {
+    if (target == 't1'){
+      //0이면 빈자리
       if ((yolo_result?["table1"]['object']['notebook'] == 0) &&
           (yolo_result?["table1"]['object']['book'] == 0) &&
           (yolo_result?["table1"]['object']['bag'] == 0) &&
@@ -201,16 +190,17 @@ class myPainter extends CustomPainter {
           (yolo_result?["table1"]['chair']['up'] == 0) &&
           (yolo_result?["table1"]['chair']['down'] == 0)) {
         _emptytable(canvas, size);
-      } else {
+      }
+      //0이 아니면 자리있음
+      else {
         _table(canvas, size);
       }
     }
   }
 
-  //table3 그리기
+  //table2 그리기
   void table2(Canvas canvas, Size size) {
-    if (target == 't2' &&
-        yolo_result?["table2"].keys.elementAt(1) == "object") {
+    if (target == 't2'){
       if ((yolo_result?["table2"]['object']['notebook'] == 0) &&
           (yolo_result?["table2"]['object']['book'] == 0) &&
           (yolo_result?["table2"]['object']['bag'] == 0) &&
@@ -226,8 +216,7 @@ class myPainter extends CustomPainter {
 
   //table3 그리기
   void table3(Canvas canvas, Size size) {
-    if (target == 't3' &&
-        yolo_result?["table1"].keys.elementAt(1) == "object") {
+    if (target == 't3'){
       if ((yolo_result?["table3"]['object']['notebook'] == 0) &&
           (yolo_result?["table3"]['object']['book'] == 0) &&
           (yolo_result?["table3"]['object']['bag'] == 0) &&
@@ -251,14 +240,14 @@ class myPainter extends CustomPainter {
         table1_person(canvas, size);
         //table1
         table1(canvas, size);
-        //table2일경우
-      } else if (yolo_result?.keys.elementAt(i) == "table2") {
+      } //table2일경우
+      else if (yolo_result?.keys.elementAt(i) == "table2") {
         //table2의 person
         table2_person(canvas, size);
         //table2
         table2(canvas, size);
-        //table3일경우
-      } else {
+      } //table3일경우
+      else {
         //table3의 person
         table3_person(canvas, size);
         //table3
@@ -273,7 +262,21 @@ class myPainter extends CustomPainter {
   }
 }
 
+
 class _EmptyCheckState extends State<EmptyCheck> {
+  WebSocketChannel? channel;
+
+  //웹소켓 연결
+  websocket_connect(){
+    channel = WebSocketChannel.connect(Uri.parse('ws://35.77.144.191/ws/detectData'));
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    websocket_connect();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -308,113 +311,116 @@ class _EmptyCheckState extends State<EmptyCheck> {
               ),
               // Visibility(child: Text(yolo_result.toString()),visible: true),
               StreamBuilder(
-                stream: widget.channel?.stream,
+                // initialData: yolo_result_initial,
+                stream: channel?.stream,
                 builder: (context, snapshot) {
+                  //null 신호 일 때
                   if (snapshot.data == null) {
-                    //서버 연결 중일때 로딩 표시
                     return Center(child: CircularProgressIndicator());
-                  } else
-                    //서버 연결되서 값 들어오면 결과 값 저장
+                  } //값이 들어왔을 때
+                  else {
+                    //json -> string,dynamic
                     yolo_result = jsonDecode('${snapshot.data}');
-                  return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 24.0),
-                      child: SafeArea(
-                        child: Center(
-                            child: Column(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
-                                  Text(yolo_result.toString(),
-                                      style: TextStyle(
-                                          fontSize: 5,
-                                          color: Colors.black.withOpacity(0))),
-                                  SizedBox(
-                                    height: 45,
-                                  ),
-                                  Container(
-                                    // alignment: Alignment.center,
-                                    child: CustomPaint(
-                                      painter: myPainter("p1"),
+                    return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 24.0),
+                        child: SafeArea(
+                          child: Center(
+                              child: Column(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceEvenly,
+                                  children: <Widget>[
+                                    Text(yolo_result.toString(),
+                                        style: TextStyle(
+                                            fontSize: 5,
+                                            color: Colors.black.withOpacity(0))),
+                                    SizedBox(
+                                      height: 45,
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 50,
-                                  ),
-                                  Container(
-                                    // alignment: Alignment.center,
-                                    child: CustomPaint(
-                                      painter: myPainter("t1"),
+                                    Container(
+                                      // alignment: Alignment.center,
+                                      child: CustomPaint(
+                                        painter: myPainter("p1"),
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 50,
-                                  ),
-                                  Container(
-                                    // alignment: Alignment.center,
-                                    child: CustomPaint(
-                                      painter: myPainter("p2"),
+                                    SizedBox(
+                                      height: 50,
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 80,
-                                  ),
-                                  Container(
-                                    // alignment: Alignment.center,
-                                    child: CustomPaint(
-                                      painter: myPainter("p3"),
+                                    Container(
+                                      // alignment: Alignment.center,
+                                      child: CustomPaint(
+                                        painter: myPainter("t1"),
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 50,
-                                  ),
-                                  Container(
-                                    // alignment: Alignment.center,
-                                    child: CustomPaint(
-                                      painter: myPainter("t2"),
+                                    SizedBox(
+                                      height: 50,
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 50,
-                                  ),
-                                  Container(
-                                    // alignment: Alignment.center,
-                                    child: CustomPaint(
-                                      painter: myPainter("p4"),
+                                    Container(
+                                      // alignment: Alignment.center,
+                                      child: CustomPaint(
+                                        painter: myPainter("p2"),
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 80,
-                                  ),
-                                  Container(
-                                    // alignment: Alignment.center,
-                                    child: CustomPaint(
-                                      painter: myPainter("p5"),
+                                    SizedBox(
+                                      height: 80,
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 50,
-                                  ),
-                                  Container(
-                                    // alignment: Alignment.center,
-                                    child: CustomPaint(
-                                      painter: myPainter("t3"),
+                                    Container(
+                                      // alignment: Alignment.center,
+                                      child: CustomPaint(
+                                        painter: myPainter("p3"),
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 50,
-                                  ),
-                                  Container(
-                                    // alignment: Alignment.center,
-                                    child: CustomPaint(
-                                      painter: myPainter("p6"),
+                                    SizedBox(
+                                      height: 50,
                                     ),
-                                  ),
-                                  SizedBox(
-                                    height: 80,
-                                  ),
-                                ])),
-                      ));
-                },
+                                    Container(
+                                      // alignment: Alignment.center,
+                                      child: CustomPaint(
+                                        painter: myPainter("t2"),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 50,
+                                    ),
+                                    Container(
+                                      // alignment: Alignment.center,
+                                      child: CustomPaint(
+                                        painter: myPainter("p4"),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 80,
+                                    ),
+                                    Container(
+                                      // alignment: Alignment.center,
+                                      child: CustomPaint(
+                                        painter: myPainter("p5"),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 50,
+                                    ),
+                                    Container(
+                                      // alignment: Alignment.center,
+                                      child: CustomPaint(
+                                        painter: myPainter("t3"),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 50,
+                                    ),
+                                    Container(
+                                      // alignment: Alignment.center,
+                                      child: CustomPaint(
+                                        painter: myPainter("p6"),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 80,
+                                    ),
+                                  ])),
+                        ));
+                  }
+                  },
               ),
             ],
           ),

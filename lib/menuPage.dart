@@ -4,8 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:sm7/enterance/live_camera.dart';
 import 'package:sm7/inside/emptyCheck.dart';
 
-import 'main.dart';
-
 class MenuPage extends StatefulWidget {
   const MenuPage({Key? key}) : super(key: key);
 
@@ -63,11 +61,7 @@ class _MenuPageState extends State<MenuPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-<<<<<<< HEAD
                                 builder: (context) => LiveFeed()));
-=======
-                                builder: (context) => EmptyCheck_first()));
->>>>>>> origin/LHH
                       },
                     ),
                     SizedBox(height: 75.0),
@@ -83,7 +77,7 @@ class _MenuPageState extends State<MenuPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => EmptyCheck_first()));
+                                builder: (context) => EmptyCheck()));
                       },
                     )
                   ],
