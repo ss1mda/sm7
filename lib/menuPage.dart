@@ -63,7 +63,11 @@ class _MenuPageState extends State<MenuPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
+<<<<<<< HEAD
                                 builder: (context) => LiveFeed()));
+=======
+                                builder: (context) => EmptyCheck_first()));
+>>>>>>> origin/LHH
                       },
                     ),
                     SizedBox(height: 75.0),
