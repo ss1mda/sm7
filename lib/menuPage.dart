@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sm7/enterance/live_camera.dart';
 import 'package:sm7/inside/emptyCheck.dart';
-
 import 'main.dart';
 
 

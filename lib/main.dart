@@ -7,7 +7,9 @@ List<CameraDescription>? cameras;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   cameras = await availableCameras();
-  runApp(const MaterialApp(home: MyApp()));
+  runApp(const MaterialApp(
+    debugShowCheckedModeBanner: false,
+      home: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -25,8 +27,8 @@ class MyApp extends StatelessWidget {
                 fontSize: 50,
                 fontWeight: FontWeight.bold)),
         onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => LoginScreen(cameras!)));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => LoginScreen(cameras!)));
         },
       )),
       backgroundColor: Color.fromARGB(252, 0, 0, 0),
