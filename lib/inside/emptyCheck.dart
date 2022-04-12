@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sm7/custom_icons.dart';
-import 'package:sm7/menuPage.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class EmptyCheck extends StatefulWidget {
