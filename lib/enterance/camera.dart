@@ -24,12 +24,14 @@ class _CameraFeedState extends State<CameraFeed> {
   void initState(){
     super.initState();
     print(widget.cameras);
+    //카메라 가져오기
     if (widget.cameras == null || widget.cameras.length < 1) {
       print('No Cameras Found.');
     } else {
       controller = new CameraController(
-        widget.cameras[1],
-        ResolutionPreset.high,
+        widget.cameras[1], //0,1
+        ResolutionPreset.high, //해상도
+        imageFormatGroup: ImageFormatGroup.yuv420,
       );
       controller?.initialize().then((_) {
         if (!mounted) {
@@ -37,23 +39,19 @@ class _CameraFeedState extends State<CameraFeed> {
         }
         setState(() {});
 
+        //카메라->이미지
         controller?.startImageStream((CameraImage img) {
           if (!isDetecting) {
             isDetecting = true;
             Tflite.detectObjectOnFrame(
               bytesList: img.planes.map((plane) {return plane.bytes;}).toList(),
-              //model: "SSDMobileNet", //YOLO, SSDMobileNet
               imageHeight: img.height,
               imageWidth: img.width,
               imageMean: 127.5,
               imageStd: 127.5,
-              rotation: 90,
               numResultsPerClass: 5,
-              threshold: 0.1,
+              threshold: 0.3,
             ).then((recognitions) {
-              /*
-              When setRecognitions is called here, the parameters are being passed on to the parent widget as callback. i.e. to the LiveFeed class
-               */
               widget.setRecognitions(recognitions!, img.height, img.width);
               isDetecting = false;
             });

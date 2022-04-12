@@ -1,5 +1,4 @@
 // ignore_for_file: prefer_const_constructors
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sm7/enterance/live_camera.dart';
@@ -7,11 +6,8 @@ import 'package:sm7/inside/emptyCheck.dart';
 
 import 'main.dart';
 
-
 class MenuPage extends StatefulWidget {
-  final List<CameraDescription> cameras;
-  MenuPage(this.cameras);
-  // const MenuPage({Key? key}) : super(key: key);
+  const MenuPage({Key? key}) : super(key: key);
 
   @override
   _MenuPageState createState() => _MenuPageState();
@@ -67,7 +63,7 @@ class _MenuPageState extends State<MenuPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => LiveFeed(cameras!)));
+                                builder: (context) => LiveFeed()));
                       },
                     ),
                     SizedBox(height: 75.0),

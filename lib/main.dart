@@ -2,11 +2,9 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:sm7/login&signup/loginPage.dart';
 
-List<CameraDescription>? cameras;
+// List<CameraDescription>? cameras;
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  cameras = await availableCameras();
+void main() async {
   runApp(const MaterialApp(home: MyApp()));
 }
 
@@ -26,7 +24,7 @@ class MyApp extends StatelessWidget {
                 fontWeight: FontWeight.bold)),
         onPressed: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => LoginScreen(cameras!)));
+              context, MaterialPageRoute(builder: (context) => LoginScreen()));
         },
       )),
       backgroundColor: Color.fromARGB(252, 0, 0, 0),

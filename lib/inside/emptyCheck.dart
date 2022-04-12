@@ -46,9 +46,6 @@ Map<String, dynamic>? yolo_result;
   //   'object': {"notebook": 0, "book": 0, "bag": 0, "cup": 0}
   // }
 
-
-// Map<String, dynamic>? yolo_result2 = yolo_result;
-
 class myPainter extends CustomPainter {
   String target;
   myPainter(this.target);

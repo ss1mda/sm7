@@ -7,28 +7,35 @@ import 'package:tflite/tflite.dart';
 
 //실시간 카메라
 class LiveFeed extends StatefulWidget {
-  final List<CameraDescription> cameras;
-  LiveFeed(this.cameras);
-
   @override
   _LiveFeedState createState() => _LiveFeedState();
 }
 
 class _LiveFeedState extends State<LiveFeed> {
+  List<CameraDescription>? cameras;
   List<dynamic>? _recognitions;
   int _imageHeight = 0;
   int _imageWidth = 0;
+  bool isCamera = false;
 
   //tflite 모델 load
   loadTfModel() async {
     await Tflite.loadModel(
-      // model: "assets/ssd_mobilenet.tflite", //컴퓨터,노트북 등 싹다 판단
-      // model: "assets/model4.tflite", //mask판단
-      model: "assets/ssdlite_mobilenet_v2.tflite", //mask판단
-      // labels: "assets/ssd_mobilenet.txt",
-      // labels: "assets/model.txt", //Mask,Nomask
-      labels: "assets/model2.txt",
+      model: "assets/mask_detecting.tflite", //mask판단
+      labels: "assets/mask_detecting.txt", //got mask,no mask, wear incorrectly
     );
+  }
+  //카메라셋업
+  _setupCameras() async{
+    try {
+      cameras = await availableCameras();
+    }on CameraException catch (_){
+      print("no camera");
+    }
+    if (!mounted) return;
+    setState(() {
+      isCamera = true;
+    });
   }
 
   //인식하기위한 이미지 크기 세팅
@@ -41,35 +48,40 @@ class _LiveFeedState extends State<LiveFeed> {
   }
 
   @override
-  void initState() {
+  void initState(){
     super.initState();
+    _setupCameras();
     loadTfModel();
   }
 
   @override
   Widget build(BuildContext context) {
     Size screen = MediaQuery.of(context).size;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Detect", style: TextStyle(fontSize: 20.0)),
-        backgroundColor: Colors.black,
-        centerTitle: true,
-        elevation: 0.0,
-      ),
-      body: Stack(
-        children: <Widget>[
-          //카메라작동(camera.dart)
-          CameraFeed(widget.cameras, setRecognitions),
-          //박스 그리기(bounding_box)
-          BoundingBox(
-            _recognitions == null ? [] : _recognitions!,
-            math.max(_imageHeight, _imageWidth),
-            math.min(_imageHeight, _imageWidth),
-            screen.height,
-            screen.width,
-          ),
-        ],
-      ),
-    );
+    if (cameras == null) {
+      return Center(child: CircularProgressIndicator());
+    } else {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text("출입 마스크 확인", style: TextStyle(fontSize: 20.0)),
+          backgroundColor: Colors.black,
+          centerTitle: true,
+          elevation: 0.0,
+        ),
+        body: Stack(
+          children: <Widget>[
+            //카메라작동(camera.dart)
+            CameraFeed(cameras!, setRecognitions),
+            //박스 그리기(bounding_box)
+            BoundingBox(
+              _recognitions == null ? [] : _recognitions!,
+              math.max(_imageHeight, _imageWidth),
+              math.min(_imageHeight, _imageWidth),
+              screen.height,
+              screen.width,
+            ),
+          ],
+        ),
+      );
+    }
   }
 }

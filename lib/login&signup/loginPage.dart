@@ -1,20 +1,15 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:convert';
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sm7/login&signup/signupPage.dart';
 import 'package:sm7/menuPage.dart';
 import 'package:sm7/login&signup/utility/constants(login).dart';
 import 'dart:async';
-import '../main.dart';
 import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatefulWidget {
-  final List<CameraDescription> cameras;
-  LoginScreen(this.cameras);
-
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
@@ -24,6 +19,11 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
 
+  // Future<void> loginUser() async {
+  //   Navigator.push(
+  //       context, MaterialPageRoute(builder: (context) => MenuPage()));
+  // }
+
   Future<void> loginUser() async {
     if (_email.text.isNotEmpty && _password.text.isNotEmpty) {
       final body =
@@ -32,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
           await http.post(Uri.parse("http://35.77.144.191:8001/login"), body: body);
       if (response.statusCode == 200) {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => MenuPage(cameras!)));
+            context, MaterialPageRoute(builder: (context) => MenuPage()));
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Invaild Credentials.")));
@@ -250,7 +250,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return GestureDetector(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => CreateAccount(cameras!)));
+            context, MaterialPageRoute(builder: (context) => CreateAccount()));
       },
       child: RichText(
         text: TextSpan(

@@ -1,7 +1,6 @@
 //signupPage.dart
 import 'dart:convert';
 import 'dart:async';
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -13,9 +12,7 @@ import 'package:http/http.dart' as http;
 import '../main.dart';
 
 class CreateAccount extends StatefulWidget {
-  final List<CameraDescription>? cameras;
-  CreateAccount(this.cameras);
-  // const CreateAccount({Key? key}) : super(key: key);
+   const CreateAccount({Key? key}) : super(key: key);
   @override
   _CreateAccountState createState() => _CreateAccountState();
 }
@@ -101,7 +98,7 @@ class CustomDialog extends StatelessWidget {
                     child: Text("Confirm"),
                     onPressed: () {
                       Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => LoginScreen(cameras!)));
+                          MaterialPageRoute(builder: (_) => LoginScreen()));
                     },
                   ),
                 ),
