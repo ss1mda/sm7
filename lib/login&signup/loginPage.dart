@@ -15,7 +15,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool _rememberMe = false;
   TextEditingController _email = TextEditingController();
   TextEditingController _password = TextEditingController();
 
