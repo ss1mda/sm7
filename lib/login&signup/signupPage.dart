@@ -299,7 +299,7 @@ class _CreateAccountState extends State<CreateAccount> {
                       title: "Success",
                       description: "signUp Complete",
                       buttonText: "abc",
-                      image: Image.asset('/assets/XLpr.gif'),
+                      image: Image.asset('/assets/signup_success/XLpr.gif'),
                     ));
           }
         },

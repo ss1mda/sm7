@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 class BoundingBox extends StatelessWidget {
-  final List<dynamic> results;
+  final List<dynamic> results; //_recognitions
   final int previewH;
   final int previewW;
   final double screenH;

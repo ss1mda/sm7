@@ -28,7 +28,7 @@ class _CameraMainState extends State<CameraMain> {
   //카메라셋업
   _setupCameras() async{
     try {
-      //사용가능한 카메로 목록을 저장
+      //사용가능한 카메라를 목록을 저장
       cameras = await availableCameras();
     }on CameraException catch (_){
       print("no camera");

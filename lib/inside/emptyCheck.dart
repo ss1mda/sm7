@@ -78,10 +78,12 @@ class myPainter extends CustomPainter {
   //테이블 그리기
   void tablePainter(Canvas canvas, Size size, String tableResult) {
     //페인트 정의
+    //빈자리
     Paint paint1 = Paint()
       ..color = Colors.grey
       ..strokeCap = StrokeCap.round
       ..style = PaintingStyle.fill;
+    //자리있음
     Paint paint2 = Paint()
       ..color = Colors.blue
       ..strokeCap = StrokeCap.round
@@ -99,19 +101,17 @@ class myPainter extends CustomPainter {
   //그림 그리기 시작
   @override
   void paint(Canvas canvas, Size size) {
-    //객체 생성
-    var person = draw_person(target: target, yolo_result: yolo_result);
-    var table = draw_table(target: target, yolo_result: yolo_result);
-
-    //person, table 상태 판단
-    String personResult = person.check_person();
-    String tableResult = table.check_table();
-
     //person 그리기
     if (target[0] == 'p') {
-      personPainter(canvas, size, personResult);
+      //객체 생성
+      var person = draw_person(target: target, yolo_result: yolo_result);
+      String personResult = person.check_person();   //noperson, mask, nomask, error
+      personPainter(canvas, size, personResult); //no, yes
+
     } // table 그리기
     else {
+      var table = draw_table(target: target, yolo_result: yolo_result);
+      String tableResult = table.check_table();
       tablePainter(canvas, size, tableResult);
     }
   }
